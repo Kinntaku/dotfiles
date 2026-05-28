@@ -1,0 +1,16 @@
+% workspace
+
+# dotfiles
+code /home/kinntaku/user_dotfiles/user_dotfiles.code-workspace
+
+# note
+code /home/kinntaku/Documents/kinntaku_notes/kinntaku_notes.code-workspace
+
+# blog
+code /home/kinntaku/Documents/git_projects/Kinntaku.github.io/Kinntaku.github.io.code-workspace
+
+# latex
+code /home/kinntaku/Documents/Latex/Latex.code-workspace
+
+# lizard_robot
+code /home/kinntaku/Documents/python_projects/lizard_robot/lizard_robot.code-workspace

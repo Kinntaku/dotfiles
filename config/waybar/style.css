@@ -1,0 +1,80 @@
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 12px;
+}
+
+window#waybar {
+    background-color: #1e1e2e;
+}
+
+/* left */
+#clock {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#window {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* center */
+#workspaces button.active,
+#workspaces button.focused {
+    background-color: #585b70;
+    color: #ffffff;
+    border-radius: 0;
+}
+
+#workspaces button {
+    padding: 0px 8px;
+    background: transparent;
+    border-radius: 0;
+}
+
+/* right */
+/* audio & mic */
+#pulseaudio.output_icon.muted,
+#pulseaudio.output_value.muted,
+#pulseaudio.source_icon.source-muted,
+#pulseaudio.source_value.source-muted {
+    background-color: #f38ba8;
+    color: #1e1e2e;
+}
+
+/* battery */
+#battery.ac {
+    margin-bottom: 5px;
+}
+
+#battery.discharging.warning {
+    background-color: #f38ba8;
+    color: #1e1e2e;
+}
+
+/* darmon */
+#power-profiles-daemon {
+    min-height: 25px;
+}
+
+#power-profiles-daemon.performance {
+    background-color: #f9e2af;
+    color: #1e1e2e;
+}
+
+#power-profiles-daemon.balanced {
+    background-color: #a6e3a1;
+    color: #1e1e2e;
+}
+
+#power-profiles-daemon.power-saver {
+    background-color: #89dceb;
+    color: #1e1e2e;
+}
+
+/* tray */
+#tray {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

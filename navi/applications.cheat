@@ -1,0 +1,16 @@
+% applicatons
+
+# flomo
+zsh -ci "nohup chromium --app=https://v.flomoapp.com/mine >/dev/null 2>&1 &"
+
+# outlook
+zsh -ci "nohup chromium --app=https://outlook.live.com/ >/dev/null 2>&1 &"
+
+# Krita
+zsh -ci "nohup krita --template $HOME/user_dotfiles/assets/Blackboard.kra >/dev/null 2>&1 &"
+
+# labelme
+zsh -ci "QT_QPA_PLATFORM=xcb micromamba run -n labelme labelme"
+
+# ipbridge
+$HOME/user_dotfiles/applicatons/alkaid_ipbridge/ipbridge

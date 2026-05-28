@@ -1,0 +1,199 @@
+# 变量配置
+set $up w
+set $down s
+set $left a
+set $right d
+set $mod Mod4
+
+# 外观配置
+font pango:monospace 10
+gaps inner 2
+gaps outer 2
+
+# 自动启动
+exec --no-startup-id xss-lock --transfer-sleep-lock -- /home/kinntaku/user_dotfiles/bin/lock.sh -n
+exec_always --no-startup-id xrdb -merge ~/.Xresources
+exec_always --no-startup-id "export QT_QPA_PLATFORMTHEME=qt6ct"
+exec --no-startup-id polybar
+exec --no-startup-id feh --bg-fill ~/Pictures/Wallpapers/wallpaper.png
+exec --no-startup-id fcitx5
+exec --no-startup-id picom -b
+exec --no-startup-id nm-applet
+exec --no-startup-id blueman-applet
+exec --no-startup-id sh -c "flclash"
+exec --no-startup-id copyq
+exec --no-startup-id snipaste
+exec --no-startup-id lxqt-policykit-agent
+exec --no-startup-id dunst
+exec --no-startup-id xset -dpms && xset s off && xset s noblank &
+exec_always --no-startup-id autotiling
+exec --no-startup-id /usr/lib/xdg-desktop-portal
+exec --no-startup-id /usr/lib/xdg-desktop-portal-gtk
+exec --no-startup-id sh -c "rog-control-center"
+
+# 窗口配置
+floating_modifier $mod
+tiling_drag modifier titlebar
+bindsym Mod1+F4 kill
+
+# 改变焦点
+bindsym $mod+Shift+$left focus left
+bindsym $mod+Shift+$down focus down
+bindsym $mod+Shift+$up focus up
+bindsym $mod+Shift+$right focus right
+
+# 移动窗口
+bindsym $mod+Control+$left move left
+bindsym $mod+Control+$down move down
+bindsym $mod+Control+$up move up
+bindsym $mod+Control+$right move right
+
+# split in horizontal orientation
+bindsym Mod1+h split h
+
+# split in vertical orientation
+bindsym Mod1+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+Shift+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym Mod1+s layout stacking
+bindsym Mod1+w layout tabbed
+bindsym Mod1+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+f floating toggle
+
+# change focus between tiling / floating windows
+bindsym &mod+Shift+v focus mode_toggle
+
+# focus the parent container
+bindsym Mod1+a focus parent
+
+# focus the child container
+#bindsym Mod1+d focus child
+
+# move the currently focused window to the scratchpad
+bindsym $mod+z move scratchpad
+
+# Show the next scratchpad window or hide the focused scratchpad window.
+# If there are multiple scratchpad windows, this command cycles through them.
+bindsym $mod+c scratchpad show
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Control+1 move container to workspace number $ws1
+bindsym $mod+Control+2 move container to workspace number $ws2
+bindsym $mod+Control+3 move container to workspace number $ws3
+bindsym $mod+Control+4 move container to workspace number $ws4
+bindsym $mod+Control+5 move container to workspace number $ws5
+bindsym $mod+Control+6 move container to workspace number $ws6
+bindsym $mod+Control+7 move container to workspace number $ws7
+bindsym $mod+Control+8 move container to workspace number $ws8
+bindsym $mod+Control+9 move container to workspace number $ws9
+bindsym $mod+Control+0 move container to workspace number $ws10
+focus_follows_mouse no
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym $left       resize shrink width 10 px or 10 ppt
+        bindsym $down       resize grow height 10 px or 10 ppt
+        bindsym $up         resize shrink height 10 px or 10 ppt
+        bindsym $right      resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left        resize shrink width 10 px or 10 ppt
+        bindsym Down        resize grow height 10 px or 10 ppt
+        bindsym Up          resize shrink height 10 px or 10 ppt
+        bindsym Right       resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape or Mod1+r
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym Mod1+r mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+
+# 桌面切换
+bindsym $mod+a workspace prev
+bindsym $mod+d workspace next
+
+bindsym XF86Launch3 exec sh -c "rog-control-center"
+
+bindsym $mod+t exec kitty
+
+bindsym $mod+e exec thunar
+
+bindsym $mod+grave exec "rofi -show drun"
+
+bindsym Control+Shift+Escape exec kitty -e htop
+
+bindsym Mod1+space exec kitty -e navi --path $HOME/user_dotfiles/navi
+
+# 音量调整
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# 亮度调整
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+
+# 媒体调整
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+bindsym XF86AudioStop exec --no-startup-id playerctl stop
+
+bindsym $mod+v exec --no-startup-id copyq show
+bindsym $mod+l exec --no-startup-id bash /home/kinntaku/user_dotfiles/bin/lock.sh
+for_window [class="^copyq$"] floating enable, resize set 800 600, move position center
+for_window [class="kitty"] floating enable
+for_window [class="Thunar"] floating enable
+
+for_window [class="wechat"] floating enable
+for_window [class="wechat" title="^Weixin$"] floating disable
+
+for_window [class="QQ"] floating enable, border pixel 2
+for_window [class="QQ" title="^QQ$"] floating disable
+
+

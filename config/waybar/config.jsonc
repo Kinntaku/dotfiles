@@ -1,0 +1,177 @@
+{
+    "layer": "top",
+    "position": "right",
+    "modules-left": [
+        "clock",
+        "group/cpu",
+        "group/memory",
+        "niri/window"
+    ],
+    "modules-center": [
+        "niri/workspaces"
+    ],
+    "modules-right": [
+        "group/backlight",
+        "group/audio",
+        "group/mic",
+        "group/battery",
+        "power-profiles-daemon",
+        "tray"
+    ],
+    //left
+    //clock
+    "clock": {
+        "format": "{:%H\n%M\n--\n%d\n%m}"
+    },
+    //cpu
+    "group/cpu": {
+        "orientation": "inherit",
+        "modules": [
+            "cpu#icon",
+            "cpu#value"
+        ]
+    },
+    "cpu#icon": {
+        "format": " "
+    },
+    "cpu#value": {
+        "format": "{usage}%"
+    },
+    //memory
+    "group/memory": {
+        "orientation": "inherit",
+        "modules": [
+            "memory#icon",
+            "memory#value"
+        ]
+    },
+    "memory#icon": {
+        "format": " "
+    },
+    "memory#value": {
+        "format": "{percentage}%"
+    },
+    "niri/window": {
+        "format": "{}",
+        "icon": true,
+        "icon-size": 20,
+        "rotate": 270,
+        "max-length": 30
+    },
+    //right
+    //backlight
+    "group/backlight": {
+        "orientation": "inherit",
+        "modules": [
+            "backlight#icon",
+            "backlight#value"
+        ],
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+    "backlight#icon": {
+        "format": " "
+    },
+    "backlight#value": {
+        "format": "{percent}%"
+    },
+    //audio
+    "group/audio": {
+        "orientation": "inherit",
+        "modules": [
+            "pulseaudio#output_icon",
+            "pulseaudio#output_value"
+        ]
+    },
+    "pulseaudio#output_icon": {
+        "format": "{icon}",
+        "format-muted": " ",
+        "format-icons": [
+            " ",
+            " ",
+            " "
+        ],
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pavucontrol -t 3"
+    },
+    "pulseaudio#output_value": {
+        "format": "{volume}%",
+        "format-muted": "MUT",
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pavucontrol -t 3"
+    },
+    //mic
+    "group/mic": {
+        "orientation": "inherit",
+        "modules": [
+            "pulseaudio#source_icon",
+            "pulseaudio#source_value"
+        ]
+    },
+    "pulseaudio#source_icon": {
+        "format": "{format_source}",
+        "format-source": "",
+        "format-source-muted": " ",
+        "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+        "on-click-right": "pavucontrol -t 4",
+        "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +5%",
+        "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -5%"
+    },
+    "pulseaudio#source_value": {
+        "format": "{format_source}",
+        "format-source": "{volume}%",
+        "format-source-muted": "MUT",
+        "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+        "on-click-right": "pavucontrol -t 4",
+        "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +5%",
+        "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -5%"
+    },
+    //battery
+    "group/battery": {
+        "orientation": "inherit",
+        "modules": [
+            "battery#icon",
+            "battery#percent",
+            "battery#ac"
+        ]
+    },
+    "battery#icon": {
+        "format": "{icon}",
+        "format-icons": [
+            " ",
+            " ",
+            " ",
+            " ",
+            " "
+        ],
+        "tooltip-format": "Empty in {timeTo}\nPower: {power}W\nCycle: {cycles}"
+    },
+    "battery#percent": {
+        "format": "{capacity}%",
+        "tooltip-format": "Empty in {timeTo}\nPower: {power}W\nCycle: {cycles}"
+    },
+    "battery#ac": {
+        "format": "{icon}",
+        "format-icons": {
+            "charging": "AC",
+            "not-charging": "AC",
+            "plugged": "AC",
+            "discharging": "BAT"
+        },
+        "interval": 5,
+        "tooltip-format": "Empty in {timeTo}\nPower: {power}W\nCycle: {cycles}"
+    },
+    //daemon
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "format-icons": {
+            "performance": "",
+            "balanced": " ",
+            "power-saver": " "
+        }
+    },
+    //tray
+    "tray": {
+        "spacing": 5
+    }
+}

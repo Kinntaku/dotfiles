@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "FILE_COMMIT",
+            "type": "shell",
+            "command": "$DOTFILES/scripts/file_git.sh commit ${relativeFile}",
+            "presentation": {
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true,
+                "close": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "FILE_RESUME",
+            "type": "shell",
+            "command": "$DOTFILES/scripts/file_git.sh resume ${relativeFile}",
+            "presentation": {
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true,
+                "close": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "OPENOCD_FLASH",
+            "type": "shell",
+            "command": "openocd -f ${workspaceFolder}/flash.cfg -c program ${workspaceFolder}/build/${workspaceFolderBasename}.elf verify reset exit",
+            "presentation": {
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true,
+                "close": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,2 @@
+set selection-clipboard clipboard
+set synctex-editor-command "nvim --server /tmp/nvim.sock --remote-send '<C-\><C-n>:<C-u>%{line}<CR>'"

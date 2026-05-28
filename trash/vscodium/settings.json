@@ -1,0 +1,79 @@
+{
+    // general
+    "window.restoreWindows": "none", // 打开上一次工作区
+    "security.workspace.trust.untrustedFiles": "open", // 信任工作区
+    "workbench.colorTheme": "Panda Syntax", // 主题
+    "editor.fontFamily": "'JetBrainsMono Nerd Font', 'JetBrains Mono','Noto Sans CJK SC'", // 自定义字体
+    // file 
+    "explorer.confirmDragAndDrop": false, // 拖放移动
+    "explorer.confirmDelete": false, // 删除确认
+    "explorer.confirmPasteNative": false, // 粘贴确认
+    // 显示设置
+    "workbench.activityBar.location": "top", // 活动栏位置
+    "workbench.list.smoothScrolling": true, // 文件树平滑
+    "editor.cursorSmoothCaretAnimation": "on", // 光标平滑
+    "editor.smoothScrolling": true, // 平滑滚动
+    "editor.cursorBlinking": "smooth", // 光标平滑闪烁
+    "editor.guides.bracketPairs": true, // 括号对引导线
+    "debug.showBreakpointsInOverviewRuler": true, // 垂直滚动条显示断点标记
+    // 编辑器行为设置
+    "editor.acceptSuggestionOnEnter": "off", // 回车不接受建议
+    "files.autoSave": "afterDelay", // 自动保存
+    "files.autoGuessEncoding": true, // 自动检测文件编码
+    "editor.mouseWheelZoom": true, // 鼠标滚轮缩放home/kinntaku/.local/bin/micromamba
+    "editor.formatOnSave": true, // 保存时格式化
+    "editor.wordWrap": "on",
+    // 容器
+    "dev.containers.dockerPath": "podman", // 容器后端
+    // git 
+    "git.enableSmartCommit": true, // 启用智能提交
+    "git.confirmSync": false, // 同步时不确认
+    // markdown 
+    "markdown.copyFiles.destination": {
+        "**/*": "${documentBaseName}.assets/${unixTime}-${fileName}"
+    },
+    "markdown-preview-enhanced.previewTheme": "github-dark.css",
+    //latex
+    "latex-workshop.synctex.afterBuild.enabled": true,
+    "latex-workshop.intellisense.package.enabled": true, // 自动补全
+    "latex-workshop.latex.outDir": "./tmp",
+    "latex-workshop.latex.recipe.default": "lastUsed", // 编译配置
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "podman",
+            "args": [
+                "exec",
+                "-w",
+                "%DIR%",
+                "texlive-container",
+                "latexmk",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-outdir=%OUTDIR%",
+                "-xelatex",
+                "%DOCFILE%"
+            ]
+        }
+    ],
+    "latex-workshop.view.pdf.viewer": "external",
+    "latex-workshop.view.pdf.external.viewer.command": "zathura",
+    "latex-workshop.view.pdf.external.viewer.args": [
+        "--synctex-editor-command",
+        "code --no-sandbox -r -g %{input}:%{line}",
+        "%PDF%"
+    ],
+    "latex-workshop.view.pdf.external.synctex.args": [
+        "--synctex-forward=%LINE%:0:%TEX%",
+        "%PDF%"
+    ],
+    // file
+    "files.associations": {
+        "*.json": "jsonc"
+    },
+    // 禁止环境变量继承
+    "terminal.integrated.inheritEnv": false,
+    // jupyter 重启确认
+    "jupyter.askForKernelRestart": false,
+}

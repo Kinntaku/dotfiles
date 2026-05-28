@@ -1,0 +1,40 @@
+# pdf translate
+podman run --rm -p 7860:7860 docker.io/awwaawwa/pdfmathtranslate-next
+
+# fresh nvidia container yaml
+sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml
+
+# lazydocker
+zsh -ci 'lazydocker'
+
+# google translate
+curl -G -s "https://translate.googleapis.com/translate_a/single" \
+     --data-urlencode "client=gtx" \
+     --data-urlencode "sl=auto" \
+     --data-urlencode "tl=<target_lang>" \
+     --data-urlencode "dt=t" \
+     --data-urlencode "q=<text>" \
+     | jq -r '.[0][0][0]'; read
+
+$ target_lang: echo "zh-CN en ja ru" | tr ' ' '\n' --- --initial-query "zh-CN"
+
+# aa
+zsh -ci '<command>; read'
+
+# remove useless package
+sudo pacman -Rs $(pacman -Qdtq)
+
+# Offload Nvidia
+zsh -ci /home/kinntaku/user_dotfiles/bin/offload_nvidia.sh
+
+# Onload Nvidia
+zsh -ci /home/kinntaku/user_dotfiles/bin/onload_nvidia.sh
+
+# 7z compress
+7z a -mx=0 -mmt=on x.7z ./*
+
+# 7z extract
+7z x x.7z
+
+# rclone
+rclone serve http . --addr :8080

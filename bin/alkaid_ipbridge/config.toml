@@ -1,0 +1,39 @@
+# proxy624 配置模板 (TOML)
+#
+# 角色说明（仅 UDP 需要）：这里的 server/client 描述“桥所在的侧”，不是游戏真实的 Server/Client。
+# - server: 桥在靠近“游戏客户端”一侧；监听 remote，转发到 local。
+# - client: 桥在靠近“游戏服务器”一侧；监听/暴露 local，远端连接 remote。
+#
+# 协议说明：
+# - udp / tcp 均可；udp 支持一对多的 server 会话，client 侧限制单客户端。
+# - TCP 可省略 role 字段，配置更简洁。
+#
+# 典型 IPv4 -> IPv6 -> IPv4 桥接示例：
+#  游戏客户端 (IPv4) --本地-> server 端 remote (IPv4) --隧道-> client 端 remote (IPv6) --本地-> 游戏服务器 (IPv4)
+
+[[tunnel]]
+protocol = "udp"            # 协议：udp / tcp
+role = "server"             # server 运行在靠近游戏客户端的一侧
+listen = "0.0.0.0:7777"     # server 侧对外监听（给游戏客户端访问的 IPv4:port）
+forward  = "[2001:db8::1]:8888" # server 侧流量转发目标（client 侧对外暴露的 IPv6:port）
+enable = false
+
+[[tunnel]]
+protocol = "udp"
+role = "client"             # client 运行在靠近游戏服务器的一侧
+listen = "127.0.0.1:54321"  # client 侧本地暴露给游戏服务器的 IPv4:port
+forward  = "[2001:db8::1]:8888" # client 侧连接的远端（上面 server 暴露的 IPv6:port）
+enable = false
+
+# 如果需要 TCP，可复制上方块，protocol 改为 "tcp"，并可省略 role 字段：
+[[tunnel]]
+protocol = "tcp"
+listen = "127.0.0.1:55555"      # 本地监听地址（对游戏客户端/入口暴露）
+forward  = "[240e:30a:150:b400:365a:60ff:fe31:9299]:33333" # 转发目标（实际游戏服务器/另一侧入口）
+enable = true
+
+[[tunnel]]
+protocol = "tcp"
+listen = "[::]:55555"
+forward  = "0.0.0.0:55555"
+enable = false

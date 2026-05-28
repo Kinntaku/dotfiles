@@ -1,0 +1,16 @@
+[
+    {
+        "key": "alt+c",
+        "command": "workbench.action.tasks.runTask",
+        "args": "FILE_COMMIT"
+    },
+    {
+        "key": "alt+r",
+        "command": "workbench.action.tasks.runTask",
+        "args": "FILE_RESUME"
+    },
+    {
+        "key": "ctrl+q",
+        "command": "-workbench.action.quit"
+    }
+]
