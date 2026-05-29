@@ -467,17 +467,15 @@ vim.keymap.set({ "n", "v", "i", "t" }, "<A-q>", delete_buffer)
 
 
 for i = 1, 9 do
-	vim.keymap.set('n', '<M-' .. i .. '>', function()
+	vim.keymap.set({ "n", "v", "i", "t" }, '<M-' .. i .. '>', function()
 		-- 获取当前所有在列表中的合法 buffer
 		local buffers = vim.fn.getbufinfo({ buflisted = 1 })
 
 		-- 如果对应的索引位置有 buffer，就直接切过去
 		if buffers[i] then
 			vim.api.nvim_set_current_buf(buffers[i].bufnr)
-		else
-			print("Buffer " .. i .. " 不存在")
 		end
-	end, { desc = "切换到第 " .. i .. " 个 Buffer" })
+	end)
 end
 -- 上下改为对于视觉行
 vim.keymap.set({ "n", "v" }, "j", "gj")
