@@ -1,5 +1,5 @@
 -- 编译函数
-local function VIM_LATEX_COMPILE()
+local function LATEX_COMPILE()
 	local file_dir = vim.fn.expand("%:p:h")
 	local file_name = vim.fn.expand("%:t")
 	print("Compiling")
@@ -32,7 +32,7 @@ local function VIM_LATEX_COMPILE()
 end
 
 -- 预览函数
-local function VIM_LATEX_VIEW()
+local function LATEX_VIEW()
 	local file_path = vim.fn.expand("%:p")
 	local file_dir = vim.fn.expand("%:p:h")
 	local job_name = vim.fn.expand("%:t:r")
@@ -54,24 +54,31 @@ local function VIM_LATEX_VIEW()
 	}, { detach = true })
 end
 
--- lazygit
-function lazygit()
+-- 执行指令
+function TERMINAL_CMD(cmd)
+	if not cmd or cmd == "" then
+		return
+	end
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 		local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t")
-		if name == "lazygit" then
+		if name == cmd then
+			vim.api.nvim_set_current_buf(buf)
+			vim.schedule(function()
+				vim.cmd("startinsert")
+			end)
 			return
 		end
 	end
-	vim.cmd("terminal lazygit")
+	vim.cmd("terminal " .. cmd)
 	local current_buf = vim.api.nvim_get_current_buf()
-	vim.api.nvim_buf_set_name(current_buf, "lazygit")
+	vim.api.nvim_buf_set_name(current_buf, cmd)
 	vim.schedule(function()
 		vim.cmd("startinsert")
 	end)
 end
 
 -- 单文件提交
-function file_git_commit()
+function FILE_COMMIT()
 	local file = vim.fn.expand("%:.")
 	if file == "" then
 		return
@@ -86,55 +93,21 @@ function file_git_commit()
 	print("\nSublmit" .. file)
 end
 
--- opencode
-function opencode()
-	local target_buf_name = "opencode_terminal"
-	local bufnr = nil
-	for _, b in ipairs(vim.api.nvim_list_bufs()) do
-		if vim.api.nvim_buf_get_name(b):find(target_buf_name) then
-			bufnr = b
-			break
-		end
-	end
-	if bufnr and vim.api.nvim_buf_is_loaded(bufnr) then
-		local win = vim.fn.bufwinid(bufnr)
-		if win ~= -1 then
-			if #vim.api.nvim_list_wins() > 1 then
-				vim.api.nvim_win_hide(win)
-			else
-				vim.cmd("quit")
-			end
-		else
-			vim.cmd("botright vsplit")
-			vim.api.nvim_win_set_buf(0, bufnr)
-			pcall(function()
-				require("stickybuf").pin()
-			end)
-			vim.schedule(function()
-				vim.cmd("startinsert")
-			end)
-		end
-	else
-		vim.cmd("botright vsplit | terminal opencode")
-		bufnr = vim.api.nvim_get_current_buf()
-		vim.api.nvim_buf_set_name(bufnr, target_buf_name)
-		vim.bo[bufnr].buflisted = false
-		vim.bo[bufnr].bufhidden = "hide"
-		vim.wo.winfixwidth = true
-		pcall(function()
-			require("stickybuf").pin()
-		end)
-		vim.schedule(function()
-			vim.cmd("startinsert")
-		end)
-	end
-end
-
 return {
-	{ "latex compile", VIM_LATEX_COMPILE },
-	{ "latex view", VIM_LATEX_VIEW },
-	{ "lazygit", lazygit },
+	{ "latex compile", LATEX_COMPILE },
+	{ "latex view", LATEX_VIEW },
+	{
+		"lazygit",
+		function()
+			TERMINAL_CMD("lazygit")
+		end,
+	},
 	{ "git resume", "Telescope git_bcommits" },
-	{ "git submit", file_git_commit },
-	{ "opencode", opencode },
+	{ "git submit", FILE_COMMIT },
+	{
+		"opencode",
+		function()
+			TERMINAL_CMD("opencode")
+		end,
+	},
 }

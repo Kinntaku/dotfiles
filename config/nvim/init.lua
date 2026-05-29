@@ -35,16 +35,16 @@ end
 
 local lsp_servers_install = {
 	"lua-language-server", -- Lua
-	"clangd", -- c/cpp
-	"pyright", -- python
-	"vtsls", -- js/ts
-	"html-lsp", -- html/xml/urdf
-	"css-lsp", -- css
-	"texlab", -- tex
+	"clangd",            -- c/cpp
+	"pyright",           -- python
+	"vtsls",             -- js/ts
+	"html-lsp",          -- html/xml/urdf
+	"css-lsp",           -- css
+	"texlab",            -- tex
 	"bash-language-server", -- shell
-	"taplo", -- toml
+	"taplo",             -- toml
 	"yaml-language-server", -- yaml
-	"json-lsp", -- json
+	"json-lsp",          -- json
 }
 
 local lsp_servers = {
@@ -62,11 +62,11 @@ local lsp_servers = {
 }
 
 local formatters = {
-	"stylua", -- lua
+	"stylua",    -- lua
 	"clang-format", -- c/cpp
-	"black", -- python
-	"prettier", -- html/css/js/json/yaml
-	"shfmt", -- shell
+	"black",     -- python
+	"prettier",  -- html/css/js/json/yaml
+	"shfmt",     -- shell
 	"xmlformatter", -- xml/urdf
 }
 
@@ -171,7 +171,7 @@ require("lazy").setup({
 				options = { indicator = { style = "underline" } },
 			},
 			keys = {
-				{ "<Tab>", "<cmd>BufferLineCycleNext<CR>" },
+				{ "<Tab>",   "<cmd>BufferLineCycleNext<CR>" },
 				{ "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>" },
 			},
 		},
@@ -209,6 +209,7 @@ require("lazy").setup({
 			},
 		},
 		{
+			-- 防止某些buffer被替换掉
 			"stevearc/stickybuf.nvim",
 			opts = {},
 		},
@@ -268,16 +269,6 @@ require("lazy").setup({
 					},
 					sync_install = false,
 					auto_install = false,
-				})
-				vim.api.nvim_create_autocmd("FileType", {
-					pattern = "*",
-					callback = function()
-						if vim.bo.buftype == "" then
-							vim.wo.foldmethod = "expr"
-							vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-							vim.wo.foldlevel = 99
-						end
-					end,
 				})
 			end,
 		},
@@ -403,16 +394,16 @@ require("lazy").setup({
 -- 配置
 vim.opt.clipboard = "unnamedplus" -- 剪贴板
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
-vim.opt.number = true -- 显示当前行的真实行号
-vim.opt.relativenumber = true -- 开启相对行号
-vim.opt.tabstop = 4 -- tab 相关
+vim.opt.number = true             -- 显示当前行的真实行号
+vim.opt.relativenumber = true     -- 开启相对行号
+vim.opt.tabstop = 4               -- tab 相关
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.splitright = true -- 垂直分屏在右侧
 vim.opt.splitbelow = true -- 水平分屏在下方
-vim.keymap.set("v", "<", "<gv", { noremap = true, silent = true })
-vim.keymap.set("v", ">", ">gv", { noremap = true, silent = true })
-vim.keymap.set({ "n", "v" }, "<C-f>", "<cmd>noh<CR>", { silent = true })
+vim.keymap.set("v", "<", "<gv", { remap = false })
+vim.keymap.set("v", ">", ">gv", { remap = false })
+vim.keymap.set({ "n", "v", "i" }, "<C-f>", "<cmd>noh<CR>")
 
 -- 按键
 
@@ -421,24 +412,31 @@ vim.keymap.set("n", "<leader>tw", function()
 	vim.opt.wrap = not vim.opt.wrap:get()
 end)
 
+vim.keymap.set('n', 'o', 'o<Esc>S<Esc>', { remap = false })
+vim.keymap.set('n', 'O', 'O<Esc>S<Esc>', { remap = false })
+
 -- 行首行尾
 vim.keymap.set({ "n", "v" }, "9", "g^")
 vim.keymap.set({ "n", "v" }, "0", "g$")
 
 -- buffer 切换
-vim.keymap.set({ "n", "v" }, "<A-j>", "<C-w>j")
-vim.keymap.set({ "n", "v" }, "<A-k>", "<C-w>k")
-vim.keymap.set({ "n", "v" }, "<A-h>", "<C-w>h")
-vim.keymap.set({ "n", "v" }, "<A-l>", "<C-w>l")
-vim.keymap.set({ "n", "v", "i" }, "<A-Q>", "<cmd>close<CR>", { silent = true })
-vim.keymap.set("t", "<A-Q>", [[<C-\><C-n><cmd>close<CR>]], { silent = true })
-vim.keymap.set("n", "<A-v>", "<cmd>vs<CR>", { silent = true })
+vim.keymap.set({ "n", "v", "i" }, "<A-h>", "<Cmd>wincmd h<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<A-j>", "<Cmd>wincmd j<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<A-k>", "<Cmd>wincmd k<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<A-l>", "<Cmd>wincmd l<CR>")
+vim.keymap.set("t", "<A-h>", [[<C-\><C-n><C-w>h]])
+vim.keymap.set("t", "<A-j>", [[<C-\><C-n><C-w>j]])
+vim.keymap.set("t", "<A-k>", [[<C-\><C-n><C-w>k]])
+vim.keymap.set("t", "<A-l>", [[<C-\><C-n><C-w>l]])
+vim.keymap.set({ "n", "v", "i" }, "<A-Q>", "<cmd>close<CR>")
+vim.keymap.set("t", "<A-Q>", [[<C-\><C-n><cmd>close<CR>]])
+vim.keymap.set({ "n", "v", "i" }, "<A-v>", "<cmd>vs<CR>")
+vim.keymap.set("t", "<A-v>", [[<C-\><C-n><Cmd>vs<CR>]])
 
 local function delete_buffer(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	local buftype = vim.bo[bufnr].buftype
 	local filetype = vim.bo[bufnr].filetype
-	if buftype ~= "" or filetype == "NvimTree" then
+	if filetype == "NvimTree" then
 		vim.cmd("q")
 		return
 	end
@@ -467,31 +465,43 @@ end
 
 vim.keymap.set({ "n", "v", "i", "t" }, "<A-q>", delete_buffer)
 
+
+for i = 1, 9 do
+	vim.keymap.set('n', '<M-' .. i .. '>', function()
+		-- 获取当前所有在列表中的合法 buffer
+		local buffers = vim.fn.getbufinfo({ buflisted = 1 })
+
+		-- 如果对应的索引位置有 buffer，就直接切过去
+		if buffers[i] then
+			vim.api.nvim_set_current_buf(buffers[i].bufnr)
+		else
+			print("Buffer " .. i .. " 不存在")
+		end
+	end, { desc = "切换到第 " .. i .. " 个 Buffer" })
+end
 -- 上下改为对于视觉行
-vim.keymap.set({ "n", "v" }, "j", "gj", { silent = true })
-vim.keymap.set({ "n", "v" }, "k", "gk", { silent = true })
+vim.keymap.set({ "n", "v" }, "j", "gj")
+vim.keymap.set({ "n", "v" }, "k", "gk")
 vim.keymap.set("i", "<Down>", "<C-o>gj")
 vim.keymap.set("i", "<Up>", "<C-o>gk")
 vim.keymap.set({ "n", "v" }, "<Down>", "gj")
 vim.keymap.set({ "n", "v" }, "<Up>", "gk")
 
 -- 移动位置
-vim.keymap.set({ "n", "v", "i" }, "<A-w>", "<C-u>zz", { desc = "Scroll up half page" })
-vim.keymap.set({ "n", "v", "i" }, "<A-s>", "<C-d>zz", { desc = "Scroll down half page" })
-vim.keymap.set({ "n", "v", "i" }, "<A-a>", "10zh", { desc = "Scroll left" })
-vim.keymap.set({ "n", "v", "i" }, "<A-d>", "10zl", { desc = "Scroll right" })
+vim.keymap.set({ "n", "v" }, "<A-w>", "<C-u>zz")
+vim.keymap.set({ "n", "v" }, "<A-s>", "<C-d>zz")
+vim.keymap.set({ "n", "v" }, "<A-a>", "10zh")
+vim.keymap.set({ "n", "v" }, "<A-d>", "10zl")
 -- 删除不进剪贴板
-vim.keymap.set({ "n", "v" }, "<A-e>", '"_d', { silent = true })
-vim.keymap.set({ "n", "v" }, "dd", '"_dd', { silent = true })
-vim.keymap.set({ "n", "v" }, "D", '"_D', { silent = true })
+vim.keymap.set({ "n", "v" }, "<A-e>", '"_d')
+vim.keymap.set({ "n", "v" }, "dd", '"_dd')
+vim.keymap.set({ "n", "v" }, "D", '"_D')
 
 -- 退出终端
 vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]])
 
 -- 错误检查
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
-
--- 分屏关闭
 
 -- 自动保存
 vim.api.nvim_create_autocmd({ "BufWritePre", "InsertLeave", "TextChanged" }, {
@@ -628,3 +638,32 @@ vim.keymap.set("n", "<leader>of", function()
 	local cmd = "thunar"
 	vim.fn.jobstart({ cmd, path })
 end)
+
+local term_autocmd_group = vim.api.nvim_create_augroup("TerminalFocusInsert", { clear = true })
+
+-- 终端自动进入插入模式
+vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+	group = term_autocmd_group,
+	pattern = { "term://*", "opencode", "lazygit" },
+	callback = function()
+		vim.schedule(function()
+			if vim.bo.buftype == "terminal" then
+				vim.cmd("startinsert")
+			end
+		end)
+	end,
+})
+
+-- 自动开启折叠
+vim.api.nvim_create_autocmd("BufReadPost", {
+	pattern = "*",
+	callback = function()
+		if vim.bo.buftype == "" then
+			vim.schedule(function()
+				vim.o.foldmethod = "expr"
+				vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+				vim.o.foldlevel = 99
+			end)
+		end
+	end,
+})
