@@ -401,25 +401,30 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.splitright = true -- 垂直分屏在右侧
 vim.opt.splitbelow = true -- 水平分屏在下方
-vim.keymap.set("v", "<", "<gv", { remap = false })
-vim.keymap.set("v", ">", ">gv", { remap = false })
-vim.keymap.set({ "n", "v", "i" }, "<C-f>", "<cmd>noh<CR>")
 
 -- 按键
+
+-- 调整缩进
+vim.keymap.set("v", "<", "<gv", { remap = false })
+vim.keymap.set("v", ">", ">gv", { remap = false })
+
+-- 清除缓冲区
+vim.keymap.set({ "n", "v", "i" }, "<C-f>", "<cmd>noh<CR>")
 
 -- 切换自动换行
 vim.keymap.set("n", "<leader>tw", function()
 	vim.opt.wrap = not vim.opt.wrap:get()
 end)
 
-vim.keymap.set('n', 'o', 'o<Esc>S<Esc>', { remap = false })
-vim.keymap.set('n', 'O', 'O<Esc>S<Esc>', { remap = false })
+-- 插行不编辑
+vim.keymap.set('n', 'o', 'o<Esc>', { remap = false })
+vim.keymap.set('n', 'O', 'O<Esc>', { remap = false })
 
 -- 行首行尾
 vim.keymap.set({ "n", "v" }, "9", "g^")
 vim.keymap.set({ "n", "v" }, "0", "g$")
 
--- buffer 切换
+-- buffer 位置切换
 vim.keymap.set({ "n", "v", "i" }, "<A-h>", "<Cmd>wincmd h<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-j>", "<Cmd>wincmd j<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-k>", "<Cmd>wincmd k<CR>")
@@ -428,11 +433,16 @@ vim.keymap.set("t", "<A-h>", [[<C-\><C-n><C-w>h]])
 vim.keymap.set("t", "<A-j>", [[<C-\><C-n><C-w>j]])
 vim.keymap.set("t", "<A-k>", [[<C-\><C-n><C-w>k]])
 vim.keymap.set("t", "<A-l>", [[<C-\><C-n><C-w>l]])
+
+-- 关闭窗口
 vim.keymap.set({ "n", "v", "i" }, "<A-Q>", "<cmd>close<CR>")
 vim.keymap.set("t", "<A-Q>", [[<C-\><C-n><cmd>close<CR>]])
+
+-- 分屏
 vim.keymap.set({ "n", "v", "i" }, "<A-v>", "<cmd>vs<CR>")
 vim.keymap.set("t", "<A-v>", [[<C-\><C-n><Cmd>vs<CR>]])
 
+-- 删除 buffer
 local function delete_buffer(bufnr)
 	bufnr = bufnr or vim.api.nvim_get_current_buf()
 	local filetype = vim.bo[bufnr].filetype
@@ -447,12 +457,9 @@ local function delete_buffer(bufnr)
 			break
 		end
 	end
-
-	-- 3. 如果找到了，确保它被加载了
 	if next_buf then
 		vim.fn.bufload(next_buf)
 	else
-		-- 实在找不到才创建新的
 		next_buf = vim.api.nvim_create_buf(true, false)
 	end
 	for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -465,18 +472,16 @@ end
 
 vim.keymap.set({ "n", "v", "i", "t" }, "<A-q>", delete_buffer)
 
-
+-- 数字切换buffer
 for i = 1, 9 do
 	vim.keymap.set({ "n", "v", "i", "t" }, '<M-' .. i .. '>', function()
-		-- 获取当前所有在列表中的合法 buffer
 		local buffers = vim.fn.getbufinfo({ buflisted = 1 })
-
-		-- 如果对应的索引位置有 buffer，就直接切过去
 		if buffers[i] then
 			vim.api.nvim_set_current_buf(buffers[i].bufnr)
 		end
 	end)
 end
+
 -- 上下改为对于视觉行
 vim.keymap.set({ "n", "v" }, "j", "gj")
 vim.keymap.set({ "n", "v" }, "k", "gk")
@@ -490,6 +495,7 @@ vim.keymap.set({ "n", "v" }, "<A-w>", "<C-u>zz")
 vim.keymap.set({ "n", "v" }, "<A-s>", "<C-d>zz")
 vim.keymap.set({ "n", "v" }, "<A-a>", "10zh")
 vim.keymap.set({ "n", "v" }, "<A-d>", "10zl")
+
 -- 删除不进剪贴板
 vim.keymap.set({ "n", "v" }, "<A-e>", '"_d')
 vim.keymap.set({ "n", "v" }, "dd", '"_dd')
@@ -501,30 +507,35 @@ vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]])
 -- 错误检查
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 
--- 自动保存
-vim.api.nvim_create_autocmd({ "BufWritePre", "InsertLeave", "TextChanged" }, {
-	pattern = "*",
-	callback = function()
-		-- 文件有修改, 有实体路径, 是文件缓冲区
-		if vim.bo.modified and vim.fn.empty(vim.fn.expand("%:t")) ~= 1 and vim.bo.buftype == "" then
-			vim.cmd("write")
+-- 打开文件路径
+vim.keymap.set("n", "<leader>of", function()
+	local path = nil
+	if vim.bo.filetype == "NvimTree" then
+		local ok, api = pcall(require, "nvim-tree.api")
+		if ok then
+			local node = api.tree.get_node_under_cursor()
+			if node then
+				path = node.type == "directory" and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ":h")
+			end
 		end
-	end,
-})
+	end
+	if not path then
+		local bufnr = vim.api.nvim_get_current_buf()
+		local bufname = vim.api.nvim_buf_get_name(bufnr)
 
--- 启动监听
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "tex",
-	callback = function()
-		local sock_path = "/tmp/nvim.sock"
-		local stat = vim.uv.fs_stat(sock_path)
-		if not stat then
-			pcall(vim.fn.serverstart, sock_path)
+		if bufname ~= "" then
+			path = vim.fn.fnamemodify(bufname, ":p:h")
+		else
+			path = vim.fn.getcwd()
 		end
-	end,
-})
+	end
+	local cmd = "thunar"
+	vim.fn.jobstart({ cmd, path })
+end)
 
 -- 自定义 Telescope 面板
+
+-- 运行函数
 local function RUN_MY_COMMANDS()
 	local actions = require("telescope.actions")
 	local action_state = require("telescope.actions.state")
@@ -559,6 +570,8 @@ end
 
 vim.keymap.set("n", "<leader>a", RUN_MY_COMMANDS)
 
+-- opencode 相关
+
 -- 获取相对路径
 local function get_relative_file_path()
 	return vim.fn.fnamemodify(vim.fn.expand("%:p"), ":.")
@@ -583,65 +596,22 @@ local function get_line_range_str()
 	return string.format("L%d-L%d", start_line, end_line)
 end
 
--- 仅复制文件名
+-- 复制相对路径
 vim.keymap.set({ "n", "v" }, "<leader>cf", function()
 	local content = "@" .. get_relative_file_path()
 	vim.fn.setreg("+", content)
 end, { noremap = true, silent = true })
 
--- 复制文件名
+-- 复制行范围
 vim.keymap.set({ "n", "v" }, "<leader>cl", function()
 	local content = "@" .. get_relative_file_path() .. " " .. get_line_range_str()
 	vim.fn.setreg("+", content)
 end, { noremap = true, silent = true })
 
--- 禁止编辑二进制
-vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
-	callback = function()
-		local f = io.open(vim.api.nvim_buf_get_name(0), "rb")
-		if f then
-			local data = f:read(1024)
-			f:close()
-			if data and data:find("%z") then
-				vim.bo.readonly = true
-				vim.bo.modifiable = false
-			end
-		end
-	end,
-})
-
--- 打开路径
-vim.keymap.set("n", "<leader>of", function()
-	local path = nil
-	if vim.bo.filetype == "NvimTree" then
-		local ok, api = pcall(require, "nvim-tree.api")
-		if ok then
-			local node = api.tree.get_node_under_cursor()
-			if node then
-				path = node.type == "directory" and node.absolute_path or vim.fn.fnamemodify(node.absolute_path, ":h")
-			end
-		end
-	end
-	if not path then
-		local bufnr = vim.api.nvim_get_current_buf()
-		local bufname = vim.api.nvim_buf_get_name(bufnr)
-
-		if bufname ~= "" then
-			path = vim.fn.fnamemodify(bufname, ":p:h")
-		else
-			path = vim.fn.getcwd()
-		end
-	end
-
-	local cmd = "thunar"
-	vim.fn.jobstart({ cmd, path })
-end)
-
-local term_autocmd_group = vim.api.nvim_create_augroup("TerminalFocusInsert", { clear = true })
+-- 自动化
 
 -- 终端自动进入插入模式
 vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
-	group = term_autocmd_group,
 	pattern = { "term://*", "opencode", "lazygit" },
 	callback = function()
 		vim.schedule(function()
@@ -662,6 +632,44 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 				vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 				vim.o.foldlevel = 99
 			end)
+		end
+	end,
+})
+
+-- 禁止编辑二进制
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+	callback = function()
+		local f = io.open(vim.api.nvim_buf_get_name(0), "rb")
+		if f then
+			local data = f:read(1024)
+			f:close()
+			if data and data:find("%z") then
+				vim.bo.readonly = true
+				vim.bo.modifiable = false
+			end
+		end
+	end,
+})
+
+-- 启动监听
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "tex",
+	callback = function()
+		local sock_path = "/tmp/nvim.sock"
+		local stat = vim.uv.fs_stat(sock_path)
+		if not stat then
+			pcall(vim.fn.serverstart, sock_path)
+		end
+	end,
+})
+
+-- 自动保存
+vim.api.nvim_create_autocmd({ "BufWritePre", "InsertLeave", "TextChanged" }, {
+	pattern = "*",
+	callback = function()
+		-- 文件有修改, 有实体路径, 是文件缓冲区
+		if vim.bo.modified and vim.fn.empty(vim.fn.expand("%:t")) ~= 1 and vim.bo.buftype == "" then
+			vim.cmd("write")
 		end
 	end,
 })
