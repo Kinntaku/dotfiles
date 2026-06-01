@@ -94,6 +94,11 @@ window-rule {
 }
 
 window-rule {
+    match app-id="Xephyr"
+    open-floating false
+}
+
+window-rule {
     match app-id="satty"
     open-floating true
     default-column-width { proportion 0.5; }

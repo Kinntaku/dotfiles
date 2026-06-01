@@ -1,4 +1,12 @@
-vim.o.number = true
+-- 关闭 modeline
+vim.opt.modeline = false
+vim.o.modelines = 0
+
+-- 没准用neovide
+if vim.g.neovide then
+	vim.o.guifont = "JetBrainsMono Nerd Font,JetBrains Mono:h14"
+	-- vim.g.neovide_line_spacing = 1.15
+end
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -138,6 +146,7 @@ require("lazy").setup({
 		{
 			-- 光标移动
 			"sphamba/smear-cursor.nvim",
+			cond = not vim.g.neovide,
 
 			opts = {
 				smear_between_buffers = true,
@@ -168,11 +177,14 @@ require("lazy").setup({
 			event = "VeryLazy",
 			dependencies = "nvim-tree/nvim-web-devicons",
 			opts = {
-				options = { indicator = { style = "underline" } },
+				options = {
+					indicator = { style = "underline" },
+					close_command = "Sbd %d"
+				},
 			},
 			keys = {
-				{ "<Tab>",   "<cmd>BufferLineCycleNext<CR>" },
-				{ "<S-Tab>", "<cmd>BufferLineCyclePrev<CR>" },
+				{ "L", "<cmd>BufferLineCycleNext<CR>" },
+				{ "H", "<cmd>BufferLineCyclePrev<CR>" },
 			},
 		},
 		{
@@ -321,8 +333,19 @@ require("lazy").setup({
 				local lspconfig = require("lspconfig")
 
 				for _, server in ipairs(lsp_servers) do
-					lspconfig[server].setup({})
+					if server ~= "clangd" then
+						lspconfig[server].setup({})
+					end
 				end
+
+				require('lspconfig').clangd.setup({
+					cmd = {
+						"clangd",
+						"--background-index",
+						"--clang-tidy",
+						"--query-driver=/usr/bin/arm-none-eabi-*"
+					},
+				})
 			end,
 		},
 		{
@@ -338,6 +361,11 @@ require("lazy").setup({
 			},
 			config = function()
 				local cmp = require("cmp")
+				local luasnip = require("luasnip")
+				luasnip.setup({
+					history = true,
+					updateevents = "TextChanged,TextChangedI",
+				})
 				cmp.setup({
 					ghost_text = true,
 					snippet = {
@@ -347,6 +375,21 @@ require("lazy").setup({
 					},
 					mapping = cmp.mapping.preset.insert({
 						["<C-CR>"] = cmp.mapping.confirm({ select = true }),
+						['<C-l>'] = cmp.mapping(function(fallback)
+							if luasnip.expand_or_jumpable() then
+								luasnip.expand_or_jump()
+							else
+								fallback()
+							end
+						end, { 'i', 's' }),
+
+						['<C-h>'] = cmp.mapping(function(fallback)
+							if luasnip.jumpable(-1) then
+								luasnip.jump(-1)
+							else
+								fallback()
+							end
+						end, { 'i', 's' }),
 					}),
 					sources = cmp.config.sources({
 						{ name = "nvim_lsp" },
@@ -403,6 +446,7 @@ vim.opt.splitright = true -- 垂直分屏在右侧
 vim.opt.splitbelow = true -- 水平分屏在下方
 
 -- 按键
+vim.keymap.set("n", "<leader>mt", "<cmd>RenderMarkdown toggle<CR>")
 
 -- 调整缩进
 vim.keymap.set("v", "<", "<gv", { remap = false })
@@ -417,12 +461,12 @@ vim.keymap.set("n", "<leader>tw", function()
 end)
 
 -- 插行不编辑
-vim.keymap.set('n', 'o', 'o<Esc>', { remap = false })
-vim.keymap.set('n', 'O', 'O<Esc>', { remap = false })
+-- vim.keymap.set('n', 'o', 'o<Esc>', { remap = false })
+-- vim.keymap.set('n', 'O', 'O<Esc>', { remap = false })
 
 -- 行首行尾
-vim.keymap.set({ "n", "v" }, "9", "g^")
-vim.keymap.set({ "n", "v" }, "0", "g$")
+vim.keymap.set({ "n", "v" }, "-", "g^")
+vim.keymap.set({ "n", "v" }, "=", "g$")
 
 -- buffer 位置切换
 vim.keymap.set({ "n", "v", "i" }, "<A-h>", "<Cmd>wincmd h<CR>")
@@ -443,34 +487,41 @@ vim.keymap.set({ "n", "v", "i" }, "<A-v>", "<cmd>vs<CR>")
 vim.keymap.set("t", "<A-v>", [[<C-\><C-n><Cmd>vs<CR>]])
 
 -- 删除 buffer
-local function delete_buffer(bufnr)
-	bufnr = bufnr or vim.api.nvim_get_current_buf()
-	local filetype = vim.bo[bufnr].filetype
-	if filetype == "NvimTree" then
+local function safe_delete_buffer(opts_or_bufnr)
+	local bufnr = nil
+	if type(opts_or_bufnr) == "table" then
+		if opts_or_bufnr.args and opts_or_bufnr.args ~= "" then
+			bufnr = tonumber(opts_or_bufnr.args)
+		end
+	elseif type(opts_or_bufnr) == "number" then
+		bufnr = opts_or_bufnr
+	end
+	if not bufnr then
+		bufnr = vim.api.nvim_get_current_buf()
+	end
+	if not vim.api.nvim_buf_is_valid(bufnr) then return end
+	if vim.bo[bufnr].filetype == "NvimTree" then
 		vim.cmd("q")
 		return
 	end
-	local next_buf = nil
-	for _, b in ipairs(vim.api.nvim_list_bufs()) do
-		if b ~= bufnr and vim.bo[b].buflisted and vim.bo[b].buftype == "" then
-			next_buf = b
-			break
-		end
-	end
-	if next_buf then
-		vim.fn.bufload(next_buf)
+	if bufnr == vim.api.nvim_get_current_buf() then
+		vim.cmd("BufferLineCyclePrev")
 	else
-		next_buf = vim.api.nvim_create_buf(true, false)
-	end
-	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		if vim.api.nvim_win_get_buf(win) == bufnr then
-			vim.api.nvim_win_set_buf(win, next_buf)
+		local current_buf = vim.api.nvim_get_current_buf()
+		for _, win in ipairs(vim.api.nvim_list_wins()) do
+			if vim.api.nvim_win_get_buf(win) == bufnr then
+				vim.api.nvim_win_set_buf(win, current_buf)
+			end
 		end
 	end
 	pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
 end
 
-vim.keymap.set({ "n", "v", "i", "t" }, "<A-q>", delete_buffer)
+vim.api.nvim_create_user_command("Sbd", safe_delete_buffer, { nargs = "?", force = true })
+
+vim.keymap.set({ "n", "v", "i", "t" }, "<A-q>", function()
+	safe_delete_buffer()
+end)
 
 -- 数字切换buffer
 for i = 1, 9 do

@@ -1,0 +1,13 @@
+% embedded
+
+# generate ninja
+cmake -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=cmake/gcc-arm-none-eabi.cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+# generate lsp config
+ln -sf build/compile_commands.json .
+
+# compile
+cmake --build build
+
+# openocd
+openocd -f interface/stlink.cfg -f target/stm32fx.cfg -c "program build/x.elf verify reset exit"

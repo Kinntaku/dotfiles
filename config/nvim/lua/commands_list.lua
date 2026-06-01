@@ -93,9 +93,19 @@ function FILE_COMMIT()
 	print("\nSublmit" .. file)
 end
 
+local function CHROMIUM_OPEN()
+	local file_path = vim.fn.expand("%:p") -- 获取当前文件的绝对路径
+	if file_path == "" then
+		print("No file open")
+		return
+	end
+
+	vim.fn.jobstart({ "chromium", file_path }, { detach = true })
+end
+
 return {
 	{ "latex compile", LATEX_COMPILE },
-	{ "latex view", LATEX_VIEW },
+	{ "latex view",    LATEX_VIEW },
 	{
 		"lazygit",
 		function()
@@ -110,4 +120,5 @@ return {
 			TERMINAL_CMD("opencode")
 		end,
 	},
+	{ "chromium open", CHROMIUM_OPEN },
 }

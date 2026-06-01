@@ -14,3 +14,6 @@ zsh -ci "QT_QPA_PLATFORM=xcb micromamba run -n labelme labelme"
 
 # ipbridge
 $HOME/user_dotfiles/applicatons/alkaid_ipbridge/ipbridge
+
+# stm32cubemx
+$HOME/user_dotfiles/scripts/stm32cubemx.sh
