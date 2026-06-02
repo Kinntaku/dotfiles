@@ -5,7 +5,6 @@ vim.o.modelines = 0
 -- 没准用neovide
 if vim.g.neovide then
 	vim.o.guifont = "JetBrainsMono Nerd Font,JetBrains Mono:h14"
-	-- vim.g.neovide_line_spacing = 1.15
 end
 
 -- Bootstrap lazy.nvim
@@ -81,10 +80,18 @@ local formatters = {
 require("lazy").setup({
 	spec = {
 		{
+			-- flash 跳转
+			"folke/flash.nvim",
+			event = "VeryLazy",
+			opts = {},
+			keys = {
+				{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+			},
+		},
+		{
+			-- 括号连线
 			"lukas-reineke/indent-blankline.nvim",
 			main = "ibl",
-			---@module "ibl"
-			---@type ibl.config
 			config = function()
 				local highlight = {
 					"RainbowRed",
@@ -97,8 +104,6 @@ require("lazy").setup({
 				}
 
 				local hooks = require("ibl.hooks")
-				-- create the highlight groups in the highlight setup hook, so they are reset
-				-- every time the colorscheme changes
 				hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
 					vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
 					vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
@@ -195,6 +200,21 @@ require("lazy").setup({
 					local gitsigns = require("gitsigns")
 					vim.keymap.set("n", "<leader>hp", gitsigns.preview_hunk, { buffer = bufnr })
 					vim.keymap.set("n", "<leader>hr", gitsigns.reset_hunk, { buffer = bufnr })
+					vim.keymap.set("n", "]c", function()
+						if vim.wo.diff then
+							vim.cmd.normal({ "]c", bang = true })
+						else
+							gitsigns.nav_hunk("next")
+						end
+					end, { buffer = bufnr, desc = "Jump to next git hunk" })
+
+					vim.keymap.set("n", "[c", function()
+						if vim.wo.diff then
+							vim.cmd.normal({ "[c", bang = true })
+						else
+							gitsigns.nav_hunk("prev")
+						end
+					end, { buffer = bufnr, desc = "Jump to previous git hunk" })
 				end,
 			},
 		},
@@ -429,6 +449,9 @@ require("lazy").setup({
 			opts = {
 				completions = { lsp = { enabled = true } },
 				render_modes = { "n", "c", "i", "v", "V" },
+				code = {
+					enabled = true, -- 开启代码块渲染
+				},
 			},
 		},
 	},
@@ -721,6 +744,21 @@ vim.api.nvim_create_autocmd({ "BufWritePre", "InsertLeave", "TextChanged" }, {
 		-- 文件有修改, 有实体路径, 是文件缓冲区
 		if vim.bo.modified and vim.fn.empty(vim.fn.expand("%:t")) ~= 1 and vim.bo.buftype == "" then
 			vim.cmd("write")
+		end
+	end,
+})
+
+-- sessions
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		local buf_name = vim.api.nvim_buf_get_name(0)
+		local is_empty_buf = (buf_name == "") and (vim.bo.filetype == "")
+		if is_empty_buf and #vim.fn.argv() == 0 then
+			vim.defer_fn(function()
+				pcall(function()
+					require("telescope").extensions["session-lens"].search_session()
+				end)
+			end, 50)
 		end
 	end,
 })

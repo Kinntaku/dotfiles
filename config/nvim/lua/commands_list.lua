@@ -93,10 +93,10 @@ function FILE_COMMIT()
 	print("\nSublmit" .. file)
 end
 
+-- 使用chromium打开
 local function CHROMIUM_OPEN()
-	local file_path = vim.fn.expand("%:p") -- 获取当前文件的绝对路径
+	local file_path = vim.fn.expand("%:p")
 	if file_path == "" then
-		print("No file open")
 		return
 	end
 
@@ -112,8 +112,9 @@ return {
 			TERMINAL_CMD("lazygit")
 		end,
 	},
-	{ "git resume", "Telescope git_bcommits" },
-	{ "git submit", FILE_COMMIT },
+	{ "git resume",       "Telescope git_bcommits" },
+	{ "refresh sessions", "SessionSave" },
+	{ "git submit",       FILE_COMMIT },
 	{
 		"opencode",
 		function()
@@ -121,4 +122,12 @@ return {
 		end,
 	},
 	{ "chromium open", CHROMIUM_OPEN },
+	{
+		"open sessions",
+		function()
+			pcall(function()
+				require("telescope").extensions["session-lens"].search_session()
+			end)
+		end,
+	},
 }

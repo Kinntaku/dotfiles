@@ -147,6 +147,7 @@ binds {
     Mod+L     { spawn "swaylock"; }
     XF86Launch3 {spawn "rog-control-center";}
     XF86Calculator {spawn "qalculate-qt";}
+	XF86TouchpadToggle {spawn "zsh" "-c" "$DOTFILES/scripts/touchpad_toggle.sh";} // 开启关闭触摸板
     Ctrl+Shift+Escape {spawn "kitty" "btop";}
     Alt+Space { spawn "sh" "-c" "kitty --class=navi-window -e navi --path $DOTFILES/navi"; }
     Mod+Shift+Q { spawn-sh "GSK_RENDERER=cairo GTK_THEME=Default ADW_DISABLE_PORTAL=1 copyq read image/png > /tmp/temp_image.png && satty --filename /tmp/temp_image.png"; }
