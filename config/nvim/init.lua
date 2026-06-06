@@ -52,6 +52,7 @@ local lsp_servers_install = {
 	"taplo",             -- toml
 	"yaml-language-server", -- yaml
 	"json-lsp",          -- json
+	"tinymist"
 }
 
 local lsp_servers = {
@@ -66,6 +67,7 @@ local lsp_servers = {
 	"taplo",
 	"yamlls",
 	"jsonls",
+	"tinymist"
 }
 
 local formatters = {
@@ -75,6 +77,7 @@ local formatters = {
 	"prettier",  -- html/css/js/json/yaml
 	"shfmt",     -- shell
 	"xmlformatter", -- xml/urdf
+	"typstyle",
 }
 
 require("lazy").setup({
@@ -85,7 +88,7 @@ require("lazy").setup({
 			event = "VeryLazy",
 			opts = {},
 			keys = {
-				{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+				{ "`", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
 			},
 		},
 		{
@@ -291,6 +294,7 @@ require("lazy").setup({
 						"yaml",
 						"json",
 						"xml",
+						"typst"
 						-- "latex" -- 不能自动安装, 会报错, 需要手动编译安装
 					},
 					highlight = {
@@ -332,6 +336,7 @@ require("lazy").setup({
 					sh = { "shfmt" },
 					xml = { "xmlformatter" },
 					urdf = { "xmlformatter" },
+					typ = { "typstyle" }
 				},
 				format_on_save = {
 					timeout_ms = 500,
@@ -459,7 +464,7 @@ require("lazy").setup({
 
 -- 配置
 vim.opt.clipboard = "unnamedplus" -- 剪贴板
-vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,localoptions"
 vim.opt.number = true             -- 显示当前行的真实行号
 vim.opt.relativenumber = true     -- 开启相对行号
 vim.opt.tabstop = 4               -- tab 相关
@@ -467,6 +472,7 @@ vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.splitright = true -- 垂直分屏在右侧
 vim.opt.splitbelow = true -- 水平分屏在下方
+vim.opt.cursorline = true
 
 -- 按键
 vim.keymap.set("n", "<leader>mt", "<cmd>RenderMarkdown toggle<CR>")
@@ -762,3 +768,16 @@ vim.api.nvim_create_autocmd("VimEnter", {
 		end
 	end,
 })
+
+vim.opt.autoread = true
+
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+	pattern = "*",
+	callback = function()
+		if vim.fn.mode() ~= 'c' then
+			vim.cmd("checktime")
+		end
+	end,
+})
+
+vim.opt.updatetime = 20

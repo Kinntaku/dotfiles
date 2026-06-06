@@ -48,3 +48,4 @@ alias tree='lsd --tree'
 alias ff=fastfetch
 alias conda='micromamba'
 alias docker='podman'
+alias snvim='sudo -E nvim'
