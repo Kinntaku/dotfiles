@@ -182,10 +182,6 @@ require("lazy").setup({
 					close_command = "Sbd %d",
 				},
 			},
-			keys = {
-				{ "<A-q>", "<cmd>BufferLineCycleNext<CR>" },
-				{ "<A-e>", "<cmd>BufferLineCyclePrev<CR>" },
-			},
 		},
 		{
 			-- git 标志
@@ -416,8 +412,8 @@ vim.keymap.set("n", "<leader>nt", ":tab split<CR>")
 vim.keymap.set("n", "<leader>ct", ":tabclose<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-Q>", "<Cmd>tabnext<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-E>", "<Cmd>tabprevious<CR>")
-vim.keymap.set("t", "<A-Q>", "<C-\\><C-n><Cmd>tabnext<CR>")
-vim.keymap.set("t", "<A-E>", "<C-\\><C-n><Cmd>tabprevious<CR>")
+vim.keymap.set("t", "<A-E>", "<C-\\><C-n><Cmd>tabnext<CR>")
+vim.keymap.set("t", "<A-Q>", "<C-\\><C-n><Cmd>tabprevious<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<M-g>", "<Cmd>vertical resize -5<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<M-b>", "<Cmd>vertical resize +5<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<M-G>", "<Cmd>resize +5<CR>")
@@ -433,6 +429,8 @@ vim.keymap.set("t", "<A-C>", [[<C-\><C-n><cmd>close<CR>]])
 vim.keymap.set({ "n", "v", "i" }, "<A-v>", "<cmd>vs<CR>")
 vim.keymap.set("t", "<A-v>", [[<C-\><C-n><Cmd>vs<CR>]])
 vim.keymap.set({ "n", "v", "i" }, "<A-V>", ":split<CR>")
+vim.keymap.set({ "n", "i", "v", "s" }, "<A-e>", "<cmd>BufferLineCycleNext<CR>", {})
+vim.keymap.set({ "n", "i", "v", "s" }, "<A-q>", "<cmd>BufferLineCyclePrev<CR>", {})
 
 -- 删除 buffer
 local function safe_delete_buffer(opts_or_bufnr)
