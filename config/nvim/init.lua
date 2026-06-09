@@ -2,10 +2,7 @@
 vim.opt.modeline = false
 vim.o.modelines = 0
 
--- 没准用neovide
-if vim.g.neovide then
-	vim.o.guifont = "JetBrainsMono Nerd Font,JetBrains Mono:h14"
-end
+vim.env.PATH = "/home/kinntaku/.nvm/versions/node/v24.13.0/bin:" .. vim.env.PATH
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -42,42 +39,43 @@ end
 
 local lsp_servers_install = {
 	"lua-language-server", -- Lua
-	"clangd",            -- c/cpp
-	"pyright",           -- python
-	"vtsls",             -- js/ts
-	"html-lsp",          -- html/xml/urdf
-	"css-lsp",           -- css
-	"texlab",            -- tex
+	"clangd", -- c/cpp
+	"pyright", -- python
+	"vtsls", -- js/ts
+	"html-lsp", -- html/xml/urd
+	"css-lsp", -- css
+	"texlab", -- tex
 	"bash-language-server", -- shell
-	"taplo",             -- toml
+	"taplo", -- toml
 	"yaml-language-server", -- yaml
-	"json-lsp",          -- json
-	"tinymist"
-}
-
-local lsp_servers = {
-	"lua_ls",
-	"clangd",
-	"pyright",
-	"vtsls",
-	"html",
-	"cssls",
-	"texlab",
-	"bashls",
-	"taplo",
-	"yamlls",
-	"jsonls",
-	"tinymist"
+	"json-lsp", -- json
+	"tinymist",
 }
 
 local formatters = {
-	"stylua",    -- lua
+	"stylua", -- lua
 	"clang-format", -- c/cpp
-	"black",     -- python
-	"prettier",  -- html/css/js/json/yaml
-	"shfmt",     -- shell
+	"black", -- python
+	"prettier", -- html/css/js/json/yaml
+	"shfmt", -- shell
 	"xmlformatter", -- xml/urdf
 	"typstyle",
+}
+
+local servers = {
+	{ name = "lua_ls", cmd = { "lua-language-server" }, filetypes = { "lua" } },
+	{ name = "clangd", cmd = { "clangd" }, filetypes = { "c", "cpp" } },
+	{ name = "pyright", cmd = { "pyright-langserver", "--stdio" }, filetypes = { "python" } },
+	{ name = "rust_analyzer", cmd = { "rust-analyzer" }, filetypes = { "rust" } },
+	{ name = "vtsls", cmd = { "vtsls", "--stdio" }, filetypes = { "javascript", "typescript" } },
+	{ name = "html", cmd = { "vscode-html-language-server", "--stdio" }, filetypes = { "html" } },
+	{ name = "cssls", cmd = { "vscode-css-language-server", "--stdio" }, filetypes = { "css" } },
+	{ name = "texlab", cmd = { "texlab" }, filetypes = { "tex" } },
+	{ name = "bashls", cmd = { "bash-language-server", "start" }, filetypes = { "sh" } },
+	{ name = "taplo", cmd = { "taplo", "lsp", "stdio" }, filetypes = { "toml" } },
+	{ name = "yamlls", cmd = { "yaml-language-server", "--stdio" }, filetypes = { "yaml" } },
+	{ name = "jsonls", cmd = { "vscode-json-language-server", "--stdio" }, filetypes = { "json" } },
+	{ name = "tinymist", cmd = { "tinymist" }, filetypes = { "typst" } },
 }
 
 require("lazy").setup({
@@ -88,7 +86,14 @@ require("lazy").setup({
 			event = "VeryLazy",
 			opts = {},
 			keys = {
-				{ "`", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+				{
+					"`",
+					mode = { "n", "x", "o" },
+					function()
+						require("flash").jump()
+					end,
+					desc = "Flash",
+				},
 			},
 		},
 		{
@@ -152,19 +157,6 @@ require("lazy").setup({
 			opts = {},
 		},
 		{
-			-- 光标移动
-			"sphamba/smear-cursor.nvim",
-			cond = not vim.g.neovide,
-
-			opts = {
-				smear_between_buffers = true,
-				smear_between_neighbor_lines = true,
-				scroll_buffer_space = true,
-				legacy_computing_symbols_support = false,
-				smear_insert_mode = true,
-			},
-		},
-		{
 			-- 文件树
 			"nvim-tree/nvim-tree.lua",
 			dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -187,12 +179,12 @@ require("lazy").setup({
 			opts = {
 				options = {
 					indicator = { style = "underline" },
-					close_command = "Sbd %d"
+					close_command = "Sbd %d",
 				},
 			},
 			keys = {
-				{ "L", "<cmd>BufferLineCycleNext<CR>" },
-				{ "H", "<cmd>BufferLineCyclePrev<CR>" },
+				{ "<A-q>", "<cmd>BufferLineCycleNext<CR>" },
+				{ "<A-e>", "<cmd>BufferLineCyclePrev<CR>" },
 			},
 		},
 		{
@@ -265,13 +257,6 @@ require("lazy").setup({
 			end,
 		},
 		{
-			-- 输入法切换
-			"keaising/im-select.nvim",
-			opts = {
-				default_im_select = "keyboard-us",
-			},
-		},
-		{
 			-- 语法高亮
 			"nvim-treesitter/nvim-treesitter",
 			lazy = false,
@@ -294,7 +279,7 @@ require("lazy").setup({
 						"yaml",
 						"json",
 						"xml",
-						"typst"
+						"typst",
 						-- "latex" -- 不能自动安装, 会报错, 需要手动编译安装
 					},
 					highlight = {
@@ -307,6 +292,11 @@ require("lazy").setup({
 					auto_install = false,
 				})
 			end,
+		},
+		{
+			-- masson
+			"williamboman/mason.nvim",
+			opts = {},
 		},
 		{
 			-- lsp/format 安装
@@ -336,7 +326,7 @@ require("lazy").setup({
 					sh = { "shfmt" },
 					xml = { "xmlformatter" },
 					urdf = { "xmlformatter" },
-					typ = { "typstyle" }
+					typ = { "typstyle" },
 				},
 				format_on_save = {
 					timeout_ms = 500,
@@ -345,107 +335,14 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- lsp
-			"neovim/nvim-lspconfig",
-			dependencies = {
-				"williamboman/mason.nvim",
-				"williamboman/mason-lspconfig.nvim",
-				"hrsh7th/cmp-nvim-lsp",
+			-- 代码补全
+			"saghen/blink.cmp",
+			version = "*",
+			opts = {
+				keymap = {
+					["<C-CR>"] = { "accept", "fallback" },
+				},
 			},
-			config = function()
-				require("mason").setup()
-
-				local lspconfig = require("lspconfig")
-
-				for _, server in ipairs(lsp_servers) do
-					if server ~= "clangd" then
-						lspconfig[server].setup({})
-					end
-				end
-
-				require('lspconfig').clangd.setup({
-					cmd = {
-						"clangd",
-						"--background-index",
-						"--clang-tidy",
-						"--query-driver=/usr/bin/arm-none-eabi-*"
-					},
-				})
-			end,
-		},
-		{
-			-- 代码提示
-			"hrsh7th/nvim-cmp",
-			event = "InsertEnter",
-			dependencies = {
-				"hrsh7th/cmp-nvim-lsp",
-				"hrsh7th/cmp-buffer",
-				"hrsh7th/cmp-path",
-				"L3MON4D3/LuaSnip",
-				"saadparwaiz1/cmp_luasnip",
-			},
-			config = function()
-				local cmp = require("cmp")
-				local luasnip = require("luasnip")
-				luasnip.setup({
-					history = true,
-					updateevents = "TextChanged,TextChangedI",
-				})
-				cmp.setup({
-					ghost_text = true,
-					snippet = {
-						expand = function(args)
-							require("luasnip").lsp_expand(args.body)
-						end,
-					},
-					mapping = cmp.mapping.preset.insert({
-						["<C-CR>"] = cmp.mapping.confirm({ select = true }),
-						['<C-l>'] = cmp.mapping(function(fallback)
-							if luasnip.expand_or_jumpable() then
-								luasnip.expand_or_jump()
-							else
-								fallback()
-							end
-						end, { 'i', 's' }),
-
-						['<C-h>'] = cmp.mapping(function(fallback)
-							if luasnip.jumpable(-1) then
-								luasnip.jump(-1)
-							else
-								fallback()
-							end
-						end, { 'i', 's' }),
-					}),
-					sources = cmp.config.sources({
-						{ name = "nvim_lsp" },
-						{ name = "luasnip" },
-					}, {
-						{ name = "buffer" },
-						{ name = "path" },
-					}),
-					performance = {
-						max_view_entries = 10,
-					},
-				})
-			end,
-		},
-		{
-			-- 自动括号
-			"windwp/nvim-autopairs",
-			event = "InsertEnter",
-			config = function()
-				require("nvim-autopairs").setup({
-					check_ts = true,
-					ts_config = {
-						lua = { "string" },
-						javascript = { "template_string" },
-						java = false,
-					},
-				})
-				local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-				local cmp = require("cmp")
-				cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
-			end,
 		},
 		{
 			-- markdown 渲染
@@ -459,20 +356,33 @@ require("lazy").setup({
 				},
 			},
 		},
+		{
+			-- 括号补全
+			"echasnovski/mini.pairs",
+			opts = {},
+		},
 	},
 })
+-- 基础折叠设置
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
+vim.opt.foldcolumn = "1"
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 -- 配置
 vim.opt.clipboard = "unnamedplus" -- 剪贴板
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,localoptions"
-vim.opt.number = true             -- 显示当前行的真实行号
-vim.opt.relativenumber = true     -- 开启相对行号
-vim.opt.tabstop = 4               -- tab 相关
+vim.opt.number = true -- 显示当前行的真实行号
+vim.opt.relativenumber = true -- 开启相对行号
+vim.opt.tabstop = 4 -- tab 相关
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.splitright = true -- 垂直分屏在右侧
 vim.opt.splitbelow = true -- 水平分屏在下方
 vim.opt.cursorline = true
+vim.opt.linebreak = true
 
 -- 按键
 vim.keymap.set("n", "<leader>mt", "<cmd>RenderMarkdown toggle<CR>")
@@ -489,15 +399,11 @@ vim.keymap.set("n", "<leader>tw", function()
 	vim.opt.wrap = not vim.opt.wrap:get()
 end)
 
--- 插行不编辑
--- vim.keymap.set('n', 'o', 'o<Esc>', { remap = false })
--- vim.keymap.set('n', 'O', 'O<Esc>', { remap = false })
-
 -- 行首行尾
 vim.keymap.set({ "n", "v" }, "-", "g^")
 vim.keymap.set({ "n", "v" }, "=", "g$")
 
--- buffer 位置切换
+-- window 位置切换
 vim.keymap.set({ "n", "v", "i" }, "<A-h>", "<Cmd>wincmd h<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-j>", "<Cmd>wincmd j<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-k>", "<Cmd>wincmd k<CR>")
@@ -506,14 +412,27 @@ vim.keymap.set("t", "<A-h>", [[<C-\><C-n><C-w>h]])
 vim.keymap.set("t", "<A-j>", [[<C-\><C-n><C-w>j]])
 vim.keymap.set("t", "<A-k>", [[<C-\><C-n><C-w>k]])
 vim.keymap.set("t", "<A-l>", [[<C-\><C-n><C-w>l]])
-
--- 关闭窗口
-vim.keymap.set({ "n", "v", "i" }, "<A-Q>", "<cmd>close<CR>")
-vim.keymap.set("t", "<A-Q>", [[<C-\><C-n><cmd>close<CR>]])
+vim.keymap.set("n", "<leader>nt", ":tab split<CR>")
+vim.keymap.set("n", "<leader>ct", ":tabclose<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<A-Q>", "<Cmd>tabnext<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<A-E>", "<Cmd>tabprevious<CR>")
+vim.keymap.set("t", "<A-Q>", "<C-\\><C-n><Cmd>tabnext<CR>")
+vim.keymap.set("t", "<A-E>", "<C-\\><C-n><Cmd>tabprevious<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<M-g>", "<Cmd>vertical resize -5<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<M-b>", "<Cmd>vertical resize +5<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<M-G>", "<Cmd>resize +5<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<M-B>", "<Cmd>resize -5<CR>")
+vim.keymap.set("t", "<M-g>", [[<C-\><C-n><Cmd>vertical resize -5<CR>a]])
+vim.keymap.set("t", "<M-b>", [[<C-\><C-n><Cmd>vertical resize +5<CR>a]])
+vim.keymap.set("t", "<M-G>", [[<C-\><C-n><Cmd>resize +5<CR>a]])
+vim.keymap.set("t", "<M-B>", [[<C-\><C-n><Cmd>resize -5<CR>a]]) -- 关闭窗口
+vim.keymap.set({ "n", "v", "i" }, "<A-C>", "<cmd>close<CR>")
+vim.keymap.set("t", "<A-C>", [[<C-\><C-n><cmd>close<CR>]])
 
 -- 分屏
 vim.keymap.set({ "n", "v", "i" }, "<A-v>", "<cmd>vs<CR>")
 vim.keymap.set("t", "<A-v>", [[<C-\><C-n><Cmd>vs<CR>]])
+vim.keymap.set({ "n", "v", "i" }, "<A-V>", ":split<CR>")
 
 -- 删除 buffer
 local function safe_delete_buffer(opts_or_bufnr)
@@ -528,7 +447,9 @@ local function safe_delete_buffer(opts_or_bufnr)
 	if not bufnr then
 		bufnr = vim.api.nvim_get_current_buf()
 	end
-	if not vim.api.nvim_buf_is_valid(bufnr) then return end
+	if not vim.api.nvim_buf_is_valid(bufnr) then
+		return
+	end
 	if vim.bo[bufnr].filetype == "NvimTree" then
 		vim.cmd("q")
 		return
@@ -548,13 +469,13 @@ end
 
 vim.api.nvim_create_user_command("Sbd", safe_delete_buffer, { nargs = "?", force = true })
 
-vim.keymap.set({ "n", "v", "i", "t" }, "<A-q>", function()
+vim.keymap.set({ "n", "v", "i", "t" }, "<A-c>", function()
 	safe_delete_buffer()
 end)
 
 -- 数字切换buffer
 for i = 1, 9 do
-	vim.keymap.set({ "n", "v", "i", "t" }, '<M-' .. i .. '>', function()
+	vim.keymap.set({ "n", "v", "i", "t" }, "<M-" .. i .. ">", function()
 		local buffers = vim.fn.getbufinfo({ buflisted = 1 })
 		if buffers[i] then
 			vim.api.nvim_set_current_buf(buffers[i].bufnr)
@@ -577,15 +498,12 @@ vim.keymap.set({ "n", "v" }, "<A-a>", "10zh")
 vim.keymap.set({ "n", "v" }, "<A-d>", "10zl")
 
 -- 删除不进剪贴板
-vim.keymap.set({ "n", "v" }, "<A-e>", '"_d')
-vim.keymap.set({ "n", "v" }, "dd", '"_dd')
-vim.keymap.set({ "n", "v" }, "D", '"_D')
+vim.keymap.set({ "n", "v" }, "d", '"_d')
+vim.keymap.set("n", "dd", '"_dd')
+vim.keymap.set("n", "D", '"_D')
 
 -- 退出终端
 vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]])
-
--- 错误检查
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 
 -- 打开文件路径
 vim.keymap.set("n", "<leader>of", function()
@@ -684,7 +602,7 @@ end, { noremap = true, silent = true })
 
 -- 复制行范围
 vim.keymap.set({ "n", "v" }, "<leader>cl", function()
-	local content = "@" .. get_relative_file_path() .. " " .. get_line_range_str()
+	local content = "@" .. get_relative_file_path() .. ":" .. get_line_range_str()
 	vim.fn.setreg("+", content)
 end, { noremap = true, silent = true })
 
@@ -699,20 +617,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
 				vim.cmd("startinsert")
 			end
 		end)
-	end,
-})
-
--- 自动开启折叠
-vim.api.nvim_create_autocmd("BufReadPost", {
-	pattern = "*",
-	callback = function()
-		if vim.bo.buftype == "" then
-			vim.schedule(function()
-				vim.o.foldmethod = "expr"
-				vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-				vim.o.foldlevel = 99
-			end)
-		end
 	end,
 })
 
@@ -769,15 +673,121 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	end,
 })
 
-vim.opt.autoread = true
+-- 自动加载
 
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
-	pattern = "*",
+vim.opt.autoread = true
+vim.opt.updatetime = 100
+
+-- 输入法切换
+
+local config = {
+	default_im = "keyboard-us",
+	poll_interval = 100,
+}
+
+vim.g.my_saved_im_state = config.default_im
+
+local function get_current_im()
+	local handle = io.popen("fcitx5-remote -n 2>/dev/null")
+	if not handle then
+		return config.default_im
+	end
+	local result = handle:read("*a")
+	handle:close()
+	return vim.trim(result or config.default_im)
+end
+
+local function set_im(mode)
+	if mode == "en" then
+		os.execute("fcitx5-remote -c 2>/dev/null")
+	elseif mode == "zh" then
+		os.execute("fcitx5-remote -o 2>/dev/null")
+	end
+end
+
+local im_timer = vim.loop.new_timer()
+local is_focused = true
+
+local function violent_enforce_english()
+	if not is_focused then
+		return
+	end
+
+	local mode = vim.api.nvim_get_mode().mode
+
+	if mode ~= "i" and mode ~= "t" and mode ~= "c" then
+		if get_current_im() ~= config.default_im then
+			set_im("en")
+		end
+	end
+end
+
+im_timer:start(0, config.poll_interval, vim.schedule_wrap(violent_enforce_english))
+
+local im_group = vim.api.nvim_create_augroup("MyIMSelectGroup", { clear = true })
+
+vim.api.nvim_create_autocmd("FocusGained", {
+	group = im_group,
 	callback = function()
-		if vim.fn.mode() ~= 'c' then
-			vim.cmd("checktime")
+		is_focused = true
+		local mode = vim.api.nvim_get_mode().mode
+		if mode ~= "i" and mode ~= "t" and mode ~= "c" then
+			set_im("en")
 		end
 	end,
 })
 
-vim.opt.updatetime = 20
+vim.api.nvim_create_autocmd("FocusLost", {
+	group = im_group,
+	callback = function()
+		is_focused = false
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
+	group = im_group,
+	callback = function()
+		if is_focused then
+			vim.g.my_saved_im_state = get_current_im()
+			vim.defer_fn(function()
+				set_im("en")
+			end, 10)
+		end
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter", "TermEnter" }, {
+	group = im_group,
+	callback = function()
+		if is_focused and vim.g.my_saved_im_state ~= config.default_im then
+			set_im("zh")
+		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("VimLeavePre", {
+	group = im_group,
+	callback = function()
+		if im_timer then
+			im_timer:stop()
+			im_timer:close()
+		end
+	end,
+})
+
+--lsp
+
+for _, server in ipairs(servers) do
+	vim.lsp.config(server.name, {
+		cmd = server.cmd,
+		filetypes = server.filetypes,
+		root_markers = { ".git", "go.mod", "package.json", "pyproject.toml" },
+	})
+	vim.lsp.enable(server.name)
+end
+
+-- 诊断
+
+vim.keymap.set("n", "<leader>e", function()
+	vim.diagnostic.open_float()
+end)

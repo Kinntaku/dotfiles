@@ -1,36 +1,55 @@
 -- 编译函数
 local function LATEX_COMPILE()
+	local ext = vim.fn.expand("%:e")
 	local file_dir = vim.fn.expand("%:p:h")
 	local file_name = vim.fn.expand("%:t")
-	print("Compiling")
-	local prepare_cmd =
-		string.format("podman exec -w '%s' texlive-container sh -c 'mkdir -p tmp && chmod 777 tmp'", file_dir)
-	vim.fn.system(prepare_cmd)
-	local cmd = {
-		"podman",
-		"exec",
-		"-w",
-		file_dir,
-		"texlive-container",
-		"latexmk",
-		"-xelatex",
-		"-synctex=1",
-		"-file-line-error",
-		"-interaction=nonstopmode",
-		"-outdir=tmp",
-		file_name,
-	}
-	vim.fn.jobstart(cmd, {
-		on_exit = function(_, exit_code)
-			if exit_code == 0 then
-				print("Success")
-			else
-				print("Fail")
-			end
-		end,
-	})
-end
 
+	if ext == "tex" then
+		-- === 你的原始逻辑，一行未动 ===
+		print("Compiling")
+		local prepare_cmd =
+			string.format("podman exec -w '%s' texlive-container sh -c 'mkdir -p tmp && chmod 777 tmp'", file_dir)
+		vim.fn.system(prepare_cmd)
+		local cmd = {
+			"podman",
+			"exec",
+			"-w",
+			file_dir,
+			"texlive-container",
+			"latexmk",
+			"-xelatex",
+			"-synctex=1",
+			"-file-line-error",
+			"-interaction=nonstopmode",
+			"-outdir=tmp",
+			file_name,
+		}
+		vim.fn.jobstart(cmd, {
+			on_exit = function(_, exit_code)
+				if exit_code == 0 then
+					print("Success")
+				else
+					print("Fail")
+				end
+			end,
+		})
+		-- === 原始逻辑结束 ===
+	elseif ext == "typ" then
+		vim.fn.system(string.format("mkdir -p '%s/tmp'", file_dir))
+		-- 直接使用 file_name 编译，输出到 tmp/ 下 (文件名不变，后缀改为 pdf)
+		local output = "tmp/" .. file_name:gsub("%.typ$", ".pdf")
+		local cmd = { "typst", "compile", file_name, output }
+		vim.fn.jobstart(cmd, {
+			on_exit = function(_, exit_code)
+				if exit_code == 0 then
+					print("Success")
+				else
+					print("Fail")
+				end
+			end,
+		})
+	end
+end
 -- 预览函数
 local function LATEX_VIEW()
 	local file_path = vim.fn.expand("%:p")
@@ -45,6 +64,7 @@ local function LATEX_VIEW()
 
 	local line = vim.fn.line(".")
 	local col = vim.fn.col(".")
+
 
 	vim.fn.jobstart({
 		"zathura",
@@ -105,16 +125,16 @@ end
 
 return {
 	{ "latex compile", LATEX_COMPILE },
-	{ "latex view",    LATEX_VIEW },
+	{ "latex view", LATEX_VIEW },
 	{
 		"lazygit",
 		function()
 			TERMINAL_CMD("lazygit")
 		end,
 	},
-	{ "git resume",       "Telescope git_bcommits" },
+	{ "git resume", "Telescope git_bcommits" },
 	{ "refresh sessions", "SessionSave" },
-	{ "git submit",       FILE_COMMIT },
+	{ "git submit", FILE_COMMIT },
 	{
 		"opencode",
 		function()

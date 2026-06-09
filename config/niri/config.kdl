@@ -16,10 +16,12 @@ input {
 output "eDP-1" {
     mode "2560x1600@165.002"
     scale 1.5
+	position x=0 y=1080
 }
-output "HDMI-A-1" {
-    //mode "1920x1080@165.003"
+
+output "DP-4" {
     mode "1920x1080@165.003006"
+	position x=0 y=0
 }
 
 layout {
@@ -73,6 +75,13 @@ screenshot-path null
 
 window-rule {
     match app-id="kitty"
+    opacity 0.9
+    draw-border-with-background false
+}    
+
+
+window-rule {
+    match app-id="neovide"
     opacity 0.9
     draw-border-with-background false
 }    
@@ -157,7 +166,7 @@ binds {
     Mod+Shift+Q { spawn-sh "GSK_RENDERER=cairo GTK_THEME=Default ADW_DISABLE_PORTAL=1 copyq read image/png > /tmp/temp_image.png && satty --filename /tmp/temp_image.png"; }
     Mod+T { spawn "kitty"; }
     Mod+E repeat=false { spawn "thunar"; }
-	Mod+F1 {spawn "wlr-randr" "--output" "eDP-1" "--toggle";}
+	Mod+F1 allow-when-locked=true {spawn "wlr-randr" "--output" "eDP-1" "--toggle";}
     Mod+F2 allow-when-locked=true { spawn "ddcutil" "setvcp" "10" "-" "10"; }
     Mod+F3 allow-when-locked=true { spawn "ddcutil" "setvcp" "10" "+" "10"; }
 
