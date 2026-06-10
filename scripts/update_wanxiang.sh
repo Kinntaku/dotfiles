@@ -4,7 +4,7 @@ ARCHIVE_URL="https://github.com/amzxyz/rime_wanxiang/releases/latest/download/ri
 FILE_URL="https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram"
 TARGET_DIR="$HOME/.local/share/fcitx5/rime"
 
-rm -f "$TARGET_DIR"
+rm -rf "$TARGET_DIR"
 
 if [[ ! -d "$TARGET_DIR" ]]; then
     mkdir -p "$TARGET_DIR"

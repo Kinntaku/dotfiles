@@ -1,6 +1,27 @@
+-- Bootstrap lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+	if vim.v.shell_error ~= 0 then
+		vim.api.nvim_echo(
+			{ { "Failed to clone lazy.nvim:\n", "ErrorMsg" }, { out, "WarningMsg" }, { "\nPress any key to exit..." } },
+			true,
+			{}
+		)
+		vim.fn.getchar()
+		os.exit(1)
+	end
+end
+vim.opt.rtp:prepend(lazypath)
 if vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
 	vim.cmd("cd " .. vim.fn.argv(0))
 end
+-- Make sure to setup `mapleader` and `maplocalleader` before
+-- loading lazy.nvim so that mappings are correct.
+-- This is also a good place to setup other settings (vim.opt)
+
+-- Setup lazy.nvim
 
 local lsp_servers_install = {
 	"lua-language-server", -- Lua
@@ -43,152 +64,286 @@ local servers = {
 	{ name = "tinymist", cmd = { "tinymist" }, filetypes = { "typst" } },
 }
 
-vim.pack.add({
-	{ src = "https://github.com/folke/flash.nvim" },
-	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim" },
-	{ src = "https://github.com/echasnovski/mini.comment" },
-	{ src = "https://github.com/sainnhe/everforest" },
-	{ src = "https://github.com/rmagatti/auto-session" },
-	{ src = "https://github.com/nvim-lualine/lualine.nvim" },
-	{ src = "https://github.com/nvim-tree/nvim-tree.lua" },
-	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
-	{ src = "https://github.com/akinsho/bufferline.nvim" },
-	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
-	{ src = "https://github.com/nvim-telescope/telescope.nvim" },
-	{ src = "https://github.com/nvim-lua/plenary.nvim" },
-	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" },
-	{ src = "https://github.com/stevearc/stickybuf.nvim" },
-	{ src = "https://github.com/akinsho/toggleterm.nvim" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
-	{ src = "https://github.com/williamboman/mason.nvim" },
-	{ src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
-	{ src = "https://github.com/stevearc/conform.nvim" },
-	{ src = "https://github.com/saghen/blink.cmp" },
-	{ src = "https://github.com/saghen/blink.lib" },
-	{ src = "https://github.com/echasnovski/mini.pairs" },
-	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
-	{ src = "https://github.com/nvim-mini/mini.nvim" },
-})
+require("lazy").setup({
+	spec = {
+		{
+			-- cursor jump
+			"folke/flash.nvim",
+			event = "VeryLazy",
+			opts = {},
+			keys = {
+				{
+					"`",
+					mode = { "n", "x", "o" },
+					function()
+						require("flash").jump()
+					end,
+					desc = "Flash",
+				},
+			},
+		},
+		{
+			-- rainbow indent line
+			"lukas-reineke/indent-blankline.nvim",
+			main = "ibl",
+			config = function()
+				local highlight = {
+					"RainbowRed",
+					"RainbowYellow",
+					"RainbowBlue",
+					"RainbowOrange",
+					"RainbowGreen",
+					"RainbowViolet",
+					"RainbowCyan",
+				}
 
--- indent line
+				local hooks = require("ibl.hooks")
+				hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+					vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+					vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+					vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+					vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+					vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+					vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+					vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+				end)
 
-local highlight = {
-	"RainbowRed",
-	"RainbowYellow",
-	"RainbowBlue",
-	"RainbowOrange",
-	"RainbowGreen",
-	"RainbowViolet",
-	"RainbowCyan",
-}
+				require("ibl").setup({ indent = { highlight = highlight } })
+			end,
+		},
+		{
+			"echasnovski/mini.comment",
+			lazy = false,
+			opts = {},
+		},
+		{
+			-- theme
+			"sainnhe/everforest",
+			lazy = false,
+			priority = 1000,
+			config = function()
+				vim.g.everforest_background = "hard"
+				vim.g.everforest_enable_italic = true
+				vim.cmd.colorscheme("everforest")
+			end,
+		},
+		{
+			-- auto recover sessions
+			"rmagatti/auto-session",
+			lazy = false,
+			opts = {
+				suppressed_dirs = { "~/", "~/Documents", "~/Downloads", "/" },
+			},
+		},
+		{
+			-- satus bar
+			"nvim-lualine/lualine.nvim",
+			dependencies = { "nvim-tree/nvim-web-devicons" },
+			opts = {},
+		},
+		{
+			-- file tree
+			"nvim-tree/nvim-tree.lua",
+			dependencies = { "nvim-tree/nvim-web-devicons" },
+			lazy = false,
+			opts = {
+				filters = { dotfiles = false },
+				git = { ignore = false },
+				actions = { change_dir = { enable = false } },
+				renderer = { root_folder_label = false },
+			},
+			keys = {
+				{ "<C-b>", "<cmd>NvimTreeToggle<CR>" },
+			},
+		},
+		{
+			-- buffer tab
+			"akinsho/bufferline.nvim",
+			event = "VeryLazy",
+			dependencies = "nvim-tree/nvim-web-devicons",
+			opts = {
+				options = {
+					indicator = { style = "underline" },
+					close_command = "Sbd %d",
+				},
+			},
+		},
+		{
+			-- git sign beside number line
+			"lewis6991/gitsigns.nvim",
+			opts = {
+				on_attach = function(bufnr)
+					local gitsigns = require("gitsigns")
+					vim.keymap.set("n", "<leader>hp", gitsigns.preview_hunk, { buffer = bufnr })
+					vim.keymap.set("n", "<leader>hr", gitsigns.reset_hunk, { buffer = bufnr })
+					vim.keymap.set("n", "]c", function()
+						if vim.wo.diff then
+							vim.cmd.normal({ "]c", bang = true })
+						else
+							gitsigns.nav_hunk("next")
+						end
+					end, { buffer = bufnr, desc = "Jump to next git hunk" })
 
-local hooks = require("ibl.hooks")
-hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-	vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-	vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-	vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-	vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-	vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-	vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-	vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-end)
-
-require("ibl").setup({ indent = { highlight = highlight } })
-require("flash").setup({})
-require("mini.comment").setup({})
-require("mini.pairs").setup({})
-require("lualine").setup({})
-require("telescope").setup({})
-require("mason").setup({})
-require("mason-tool-installer").setup({
-	ensure_installed = vim.list_extend(lsp_servers_install, formatters),
-	auto_update = false,
-	run_on_start = true,
-})
-require("blink.cmp").build():pwait()
-require("blink.cmp").setup({
-	keymap = { ["<C-CR>"] = { "accept", "fallback" } },
-})
-require("auto-session").setup({
-	suppressed_dirs = { "~/", "~/Documents", "~/Downloads", "/" },
-})
-require("bufferline").setup({
-	options = {
-		indicator = { style = "underline" },
-		close_command = "Sbd %d",
+					vim.keymap.set("n", "[c", function()
+						if vim.wo.diff then
+							vim.cmd.normal({ "[c", bang = true })
+						else
+							gitsigns.nav_hunk("prev")
+						end
+					end, { buffer = bufnr, desc = "Jump to previous git hunk" })
+				end,
+			},
+		},
+		{
+			-- search
+			"nvim-telescope/telescope.nvim",
+			dependencies = {
+				"nvim-lua/plenary.nvim",
+				{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+			},
+			keys = {
+				{
+					"<A-f>",
+					function()
+						require("telescope.builtin").find_files({ no_ignore = true, hidden = true })
+					end,
+				},
+				{
+					"<A-S-f>",
+					function()
+						require("telescope.builtin").live_grep({ additional_args = { "--no-ignore", "--hidden" } })
+					end,
+				},
+			},
+		},
+		{
+			-- buffer cant be cover
+			"stevearc/stickybuf.nvim",
+			opts = {},
+		},
+		{
+			-- terminale
+			"akinsho/toggleterm.nvim",
+			lazy = false,
+			opts = {
+				open_mapping = [[<C-`>]],
+			},
+			keys = {
+				{ "<A-t>", "<Cmd>TermSelect<CR>" },
+			},
+			config = function(_, opts)
+				require("toggleterm").setup(opts)({
+					direction = "horizontal",
+				})
+			end,
+		},
+		{
+			-- highlight
+			"nvim-treesitter/nvim-treesitter",
+			lazy = false,
+			branch = "main",
+			build = ":TSUpdate",
+			config = function()
+				require("nvim-treesitter.configs").setup({
+					ensure_installed = {
+						"c",
+						"cpp",
+						"python",
+						"html",
+						"css",
+						"javascript",
+						"markdown",
+						"markdown_inline",
+						"lua",
+						"bash",
+						"toml",
+						"yaml",
+						"json",
+						"xml",
+						"typst",
+						-- "latex" -- 不能自动安装, 会报错, 需要手动编译安装
+					},
+					highlight = {
+						enable = true,
+					},
+					indent = {
+						enable = true,
+					},
+					sync_install = false,
+					auto_install = false,
+				})
+			end,
+		},
+		{
+			-- masson
+			"williamboman/mason.nvim",
+			opts = {},
+		},
+		{
+			-- lsp/format install
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+			dependencies = { "williamboman/mason.nvim" },
+			opts = {
+				ensure_installed = vim.list_extend(lsp_servers_install, formatters),
+				auto_update = false,
+				run_on_start = true,
+			},
+		},
+		{
+			-- formatter
+			"stevearc/conform.nvim",
+			opts = {
+				formatters_by_ft = {
+					lua = { "stylua" },
+					python = { "black" },
+					c = { "clang-format" },
+					cpp = { "clang-format" },
+					javascript = { "prettier" },
+					html = { "prettier" },
+					css = { "prettier" },
+					json = { "prettier" },
+					yaml = { "prettier" },
+					toml = { "taplo" },
+					sh = { "shfmt" },
+					xml = { "xmlformatter" },
+					urdf = { "xmlformatter" },
+					typ = { "typstyle" },
+				},
+				format_on_save = {
+					timeout_ms = 500,
+					lsp_format = "fallback",
+				},
+			},
+		},
+		{
+			-- code completion
+			"saghen/blink.cmp",
+			version = "*",
+			opts = {
+				keymap = {
+					["<C-CR>"] = { "accept", "fallback" },
+				},
+			},
+		},
+		{
+			-- markdown render
+			"MeanderingProgrammer/render-markdown.nvim",
+			dependencies = { "nvim-mini/mini.nvim" },
+			opts = {
+				completions = { lsp = { enabled = true } },
+				render_modes = { "n", "c", "i", "v", "V" },
+				code = {
+					enabled = true,
+				},
+			},
+		},
+		{
+			-- auto pair
+			"echasnovski/mini.pairs",
+			opts = {},
+		},
 	},
 })
-require("toggleterm").setup({
-	open_mapping = [[<C-`>]],
-	direction = "horizontal",
-})
-require("nvim-tree").setup({
-	filters = { dotfiles = false },
-	git = { ignore = false },
-	actions = { change_dir = { enable = false } },
-	renderer = { root_folder_label = false },
-})
-require("gitsigns").setup({
-	on_attach = function(bufnr)
-		local gs = require("gitsigns")
-		vim.keymap.set("n", "<leader>hp", gs.preview_hunk, { buffer = bufnr })
-		vim.keymap.set("n", "<leader>hr", gs.reset_hunk, { buffer = bufnr })
-		vim.keymap.set("n", "]c", function()
-			gs.nav_hunk("next")
-		end, { buffer = bufnr })
-		vim.keymap.set("n", "[c", function()
-			gs.nav_hunk("prev")
-		end, { buffer = bufnr })
-	end,
-})
-require("conform").setup({
-	formatters_by_ft = {
-		lua = { "stylua" },
-		python = { "black" },
-		c = { "clang-format" },
-		cpp = { "clang-format" },
-		javascript = { "prettier" },
-		html = { "prettier" },
-		css = { "prettier" },
-		json = { "prettier" },
-		yaml = { "prettier" },
-		toml = { "taplo" },
-		sh = { "shfmt" },
-		xml = { "xmlformatter" },
-		urdf = { "xmlformatter" },
-		typ = { "typstyle" },
-	},
-	format_on_save = {
-		timeout_ms = 500,
-		lsp_format = "fallback",
-	},
-})
-
--- lazy  markdown render
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "markdown" },
-	once = true,
-	callback = function()
-		require("render-markdown").setup({
-			completions = { lsp = { enabled = true } },
-			render_modes = { "n", "c", "i", "v", "V" },
-			code = { enabled = true },
-		})
-	end,
-})
-
--- plugin shotcut
-vim.keymap.set({ "n", "x", "o" }, "`", function()
-	require("flash").jump()
-end)
-vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>")
-vim.keymap.set("n", "<A-f>", function()
-	require("telescope.builtin").find_files({ no_ignore = true, hidden = true })
-end)
-vim.keymap.set("n", "<A-S-f>", function()
-	require("telescope.builtin").live_grep({ additional_args = { "--no-ignore", "--hidden" } })
-end)
-vim.keymap.set("n", "<A-t>", "<Cmd>TermSelect<CR>")
 
 -- settings
 vim.g.mapleader = " "
@@ -209,11 +364,6 @@ vim.opt.cursorline = true
 vim.opt.linebreak = true
 vim.opt.autoread = true
 vim.opt.updatetime = 100
-
--- theme
-vim.g.everforest_background = "hard"
-vim.g.everforest_enable_italic = true
-vim.cmd.colorscheme("everforest")
 
 -- fold settings
 vim.opt.foldlevel = 99

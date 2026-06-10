@@ -2,3 +2,6 @@ patch:
   switches/@1/reset: 1
   switches/@10/reset: 1
   translator/spelling_hints: 30
+  ascii_composer/switch_key:
+    Shift_L: noop
+    Shift_R: noop
