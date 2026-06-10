@@ -1,9 +1,3 @@
--- 关闭 modeline
-vim.opt.modeline = false
-vim.o.modelines = 0
-
-vim.env.PATH = "/home/kinntaku/.nvm/versions/node/v24.13.0/bin:" .. vim.env.PATH
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -27,14 +21,6 @@ end
 -- loading lazy.nvim so that mappings are correct.
 -- This is also a good place to setup other settings (vim.opt)
 
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
-
-vim.notify = function(msg, log_level, _opts)
-	if msg:find("require('lspconfig')") then
-		return
-	end
-end
 -- Setup lazy.nvim
 
 local lsp_servers_install = {
@@ -81,7 +67,7 @@ local servers = {
 require("lazy").setup({
 	spec = {
 		{
-			-- flash 跳转
+			-- cursor jump
 			"folke/flash.nvim",
 			event = "VeryLazy",
 			opts = {},
@@ -97,7 +83,7 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- 括号连线
+			-- rainbow indent line
 			"lukas-reineke/indent-blankline.nvim",
 			main = "ibl",
 			config = function()
@@ -126,13 +112,12 @@ require("lazy").setup({
 			end,
 		},
 		{
-			-- 快速注释
-			"numToStr/Comment.nvim",
-			opts = {},
+			"echasnovski/mini.comment",
 			lazy = false,
+			opts = {},
 		},
 		{
-			-- 主题
+			-- theme
 			"sainnhe/everforest",
 			lazy = false,
 			priority = 1000,
@@ -143,7 +128,7 @@ require("lazy").setup({
 			end,
 		},
 		{
-			-- 会话恢复
+			-- auto recover sessions
 			"rmagatti/auto-session",
 			lazy = false,
 			opts = {
@@ -151,13 +136,13 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- 状态栏
+			-- satus bar
 			"nvim-lualine/lualine.nvim",
 			dependencies = { "nvim-tree/nvim-web-devicons" },
 			opts = {},
 		},
 		{
-			-- 文件树
+			-- file tree
 			"nvim-tree/nvim-tree.lua",
 			dependencies = { "nvim-tree/nvim-web-devicons" },
 			lazy = false,
@@ -172,7 +157,7 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- 标签栏
+			-- buffer tab
 			"akinsho/bufferline.nvim",
 			event = "VeryLazy",
 			dependencies = "nvim-tree/nvim-web-devicons",
@@ -184,7 +169,7 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- git 标志
+			-- git sign beside number line
 			"lewis6991/gitsigns.nvim",
 			opts = {
 				on_attach = function(bufnr)
@@ -210,7 +195,7 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- 搜索
+			-- search
 			"nvim-telescope/telescope.nvim",
 			dependencies = {
 				"nvim-lua/plenary.nvim",
@@ -232,12 +217,12 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- 防止某些buffer被替换掉
+			-- buffer cant be cover
 			"stevearc/stickybuf.nvim",
 			opts = {},
 		},
 		{
-			-- 终端
+			-- terminale
 			"akinsho/toggleterm.nvim",
 			lazy = false,
 			opts = {
@@ -253,7 +238,7 @@ require("lazy").setup({
 			end,
 		},
 		{
-			-- 语法高亮
+			-- highlight
 			"nvim-treesitter/nvim-treesitter",
 			lazy = false,
 			branch = "main",
@@ -295,7 +280,7 @@ require("lazy").setup({
 			opts = {},
 		},
 		{
-			-- lsp/format 安装
+			-- lsp/format install
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 			dependencies = { "williamboman/mason.nvim" },
 			opts = {
@@ -305,7 +290,7 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- 格式化
+			-- formatter
 			"stevearc/conform.nvim",
 			opts = {
 				formatters_by_ft = {
@@ -331,7 +316,7 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- 代码补全
+			-- code completion
 			"saghen/blink.cmp",
 			version = "*",
 			opts = {
@@ -341,25 +326,46 @@ require("lazy").setup({
 			},
 		},
 		{
-			-- markdown 渲染
+			-- markdown render
 			"MeanderingProgrammer/render-markdown.nvim",
 			dependencies = { "nvim-mini/mini.nvim" },
 			opts = {
 				completions = { lsp = { enabled = true } },
 				render_modes = { "n", "c", "i", "v", "V" },
 				code = {
-					enabled = true, -- 开启代码块渲染
+					enabled = true,
 				},
 			},
 		},
 		{
-			-- 括号补全
+			-- auto pair
 			"echasnovski/mini.pairs",
 			opts = {},
 		},
 	},
 })
--- 基础折叠设置
+
+-- settings
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+vim.opt.modeline = false
+vim.o.modelines = 0
+vim.env.PATH = "/home/kinntaku/.nvm/versions/node/v24.13.0/bin:" .. vim.env.PATH
+vim.opt.clipboard = "unnamedplus"
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,localoptions"
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.cursorline = true
+vim.opt.linebreak = true
+vim.opt.autoread = true
+vim.opt.updatetime = 100
+
+-- fold settings
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
@@ -367,39 +373,41 @@ vim.opt.foldcolumn = "1"
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
--- 配置
-vim.opt.clipboard = "unnamedplus" -- 剪贴板
-vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,localoptions"
-vim.opt.number = true -- 显示当前行的真实行号
-vim.opt.relativenumber = true -- 开启相对行号
-vim.opt.tabstop = 4 -- tab 相关
-vim.opt.shiftwidth = 4
-vim.opt.softtabstop = 4
-vim.opt.splitright = true -- 垂直分屏在右侧
-vim.opt.splitbelow = true -- 水平分屏在下方
-vim.opt.cursorline = true
-vim.opt.linebreak = true
+-- disable notify
+vim.notify = function(msg, log_level, _opts)
+	if msg:find("require('lspconfig')") then
+		return
+	end
+end
 
--- 按键
+-- lsp设置
+for _, server in ipairs(servers) do
+	vim.lsp.config(server.name, {
+		cmd = server.cmd,
+		filetypes = server.filetypes,
+		root_markers = { ".git", "go.mod", "package.json", "pyproject.toml" },
+	})
+	vim.lsp.enable(server.name)
+end
+
+-- functional keybindings
+
+-- open diagnostic panel
+vim.keymap.set("n", "<leader>e", function()
+	vim.diagnostic.open_float()
+end)
+
+-- toggle markdown renden
 vim.keymap.set("n", "<leader>mt", "<cmd>RenderMarkdown toggle<CR>")
 
--- 调整缩进
-vim.keymap.set("v", "<", "<gv", { remap = false })
-vim.keymap.set("v", ">", ">gv", { remap = false })
-
--- 清除缓冲区
-vim.keymap.set({ "n", "v", "i" }, "<C-f>", "<cmd>noh<CR>")
-
--- 切换自动换行
+-- toggle auto enetr
 vim.keymap.set("n", "<leader>tw", function()
 	vim.opt.wrap = not vim.opt.wrap:get()
 end)
 
--- 行首行尾
-vim.keymap.set({ "n", "v" }, "-", "g^")
-vim.keymap.set({ "n", "v" }, "=", "g$")
+-- rebindings
 
--- window 位置切换
+-- window & tab
 vim.keymap.set({ "n", "v", "i" }, "<A-h>", "<Cmd>wincmd h<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-j>", "<Cmd>wincmd j<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-k>", "<Cmd>wincmd k<CR>")
@@ -424,15 +432,48 @@ vim.keymap.set("t", "<M-G>", [[<C-\><C-n><Cmd>resize +5<CR>a]])
 vim.keymap.set("t", "<M-B>", [[<C-\><C-n><Cmd>resize -5<CR>a]]) -- 关闭窗口
 vim.keymap.set({ "n", "v", "i" }, "<A-C>", "<cmd>close<CR>")
 vim.keymap.set("t", "<A-C>", [[<C-\><C-n><cmd>close<CR>]])
-
--- 分屏
 vim.keymap.set({ "n", "v", "i" }, "<A-v>", "<cmd>vs<CR>")
 vim.keymap.set("t", "<A-v>", [[<C-\><C-n><Cmd>vs<CR>]])
 vim.keymap.set({ "n", "v", "i" }, "<A-V>", ":split<CR>")
-vim.keymap.set({ "n", "i", "v", "s" }, "<A-e>", "<cmd>BufferLineCycleNext<CR>", {})
-vim.keymap.set({ "n", "i", "v", "s" }, "<A-q>", "<cmd>BufferLineCyclePrev<CR>", {})
+vim.keymap.set({ "n", "i", "v", "t" }, "<A-e>", "<cmd>BufferLineCycleNext<CR>", {})
+vim.keymap.set({ "n", "i", "v", "t" }, "<A-q>", "<cmd>BufferLineCyclePrev<CR>", {})
 
--- 删除 buffer
+-- move cursor
+vim.keymap.set({ "n", "v" }, "j", "gj")
+vim.keymap.set({ "n", "v" }, "k", "gk")
+vim.keymap.set("i", "<Down>", "<C-o>gj")
+vim.keymap.set("i", "<Up>", "<C-o>gk")
+vim.keymap.set({ "n", "v" }, "<Down>", "gj")
+vim.keymap.set({ "n", "v" }, "<Up>", "gk")
+
+-- move view
+vim.keymap.set({ "n", "v" }, "<A-w>", "<C-u>zz")
+vim.keymap.set({ "n", "v" }, "<A-s>", "<C-d>zz")
+vim.keymap.set({ "n", "v" }, "<A-a>", "10zh")
+vim.keymap.set({ "n", "v" }, "<A-d>", "10zl")
+
+-- delete without copy
+vim.keymap.set({ "n", "v" }, "d", '"_d')
+vim.keymap.set("n", "dd", '"_dd')
+vim.keymap.set("n", "D", '"_D')
+
+-- exit terminal
+vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]])
+
+-- line head & end
+vim.keymap.set({ "n", "v" }, "-", "g^")
+vim.keymap.set({ "n", "v" }, "=", "g$")
+
+-- change indent
+vim.keymap.set("v", "<", "<gv", { remap = false })
+vim.keymap.set("v", ">", ">gv", { remap = false })
+
+-- clean noh
+vim.keymap.set({ "n", "v", "i" }, "<C-f>", "<cmd>noh<CR>")
+
+-- complex keybings
+
+-- delete buffer
 local function safe_delete_buffer(opts_or_bufnr)
 	local bufnr = nil
 	if type(opts_or_bufnr) == "table" then
@@ -471,7 +512,7 @@ vim.keymap.set({ "n", "v", "i", "t" }, "<A-c>", function()
 	safe_delete_buffer()
 end)
 
--- 数字切换buffer
+-- change buffer
 for i = 1, 9 do
 	vim.keymap.set({ "n", "v", "i", "t" }, "<M-" .. i .. ">", function()
 		local buffers = vim.fn.getbufinfo({ buflisted = 1 })
@@ -481,29 +522,7 @@ for i = 1, 9 do
 	end)
 end
 
--- 上下改为对于视觉行
-vim.keymap.set({ "n", "v" }, "j", "gj")
-vim.keymap.set({ "n", "v" }, "k", "gk")
-vim.keymap.set("i", "<Down>", "<C-o>gj")
-vim.keymap.set("i", "<Up>", "<C-o>gk")
-vim.keymap.set({ "n", "v" }, "<Down>", "gj")
-vim.keymap.set({ "n", "v" }, "<Up>", "gk")
-
--- 移动位置
-vim.keymap.set({ "n", "v" }, "<A-w>", "<C-u>zz")
-vim.keymap.set({ "n", "v" }, "<A-s>", "<C-d>zz")
-vim.keymap.set({ "n", "v" }, "<A-a>", "10zh")
-vim.keymap.set({ "n", "v" }, "<A-d>", "10zl")
-
--- 删除不进剪贴板
-vim.keymap.set({ "n", "v" }, "d", '"_d')
-vim.keymap.set("n", "dd", '"_dd')
-vim.keymap.set("n", "D", '"_D')
-
--- 退出终端
-vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]])
-
--- 打开文件路径
+-- open path in expoler
 vim.keymap.set("n", "<leader>of", function()
 	local path = nil
 	if vim.bo.filetype == "NvimTree" then
@@ -529,9 +548,8 @@ vim.keymap.set("n", "<leader>of", function()
 	vim.fn.jobstart({ cmd, path })
 end)
 
--- 自定义 Telescope 面板
+-- custom panel
 
--- 运行函数
 local function RUN_MY_COMMANDS()
 	local actions = require("telescope.actions")
 	local action_state = require("telescope.actions.state")
@@ -566,14 +584,14 @@ end
 
 vim.keymap.set("n", "<leader>a", RUN_MY_COMMANDS)
 
--- opencode 相关
+-- opencode
 
--- 获取相对路径
+-- get relative file path
 local function get_relative_file_path()
 	return vim.fn.fnamemodify(vim.fn.expand("%:p"), ":.")
 end
 
--- 获取行范围
+-- get range of selected lines
 local function get_line_range_str()
 	local mode = vim.fn.mode()
 	local start_line, end_line
@@ -592,21 +610,21 @@ local function get_line_range_str()
 	return string.format("L%d-L%d", start_line, end_line)
 end
 
--- 复制相对路径
+-- copy relative file
 vim.keymap.set({ "n", "v" }, "<leader>cf", function()
 	local content = "@" .. get_relative_file_path()
 	vim.fn.setreg("+", content)
 end, { noremap = true, silent = true })
 
--- 复制行范围
+-- copy lines
 vim.keymap.set({ "n", "v" }, "<leader>cl", function()
 	local content = "@" .. get_relative_file_path() .. ":" .. get_line_range_str()
 	vim.fn.setreg("+", content)
 end, { noremap = true, silent = true })
 
--- 自动化
+-- automatics
 
--- 终端自动进入插入模式
+-- enter instert mode when wnter terminal
 vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
 	pattern = { "term://*", "opencode", "lazygit" },
 	callback = function()
@@ -618,7 +636,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
 	end,
 })
 
--- 禁止编辑二进制
+-- forbid editing binary file
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 	callback = function()
 		local f = io.open(vim.api.nvim_buf_get_name(0), "rb")
@@ -633,7 +651,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 	end,
 })
 
--- 启动监听
+-- start sock listen
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "tex",
 	callback = function()
@@ -645,18 +663,17 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- 自动保存
+-- auto save
 vim.api.nvim_create_autocmd({ "BufWritePre", "InsertLeave", "TextChanged" }, {
 	pattern = "*",
 	callback = function()
-		-- 文件有修改, 有实体路径, 是文件缓冲区
 		if vim.bo.modified and vim.fn.empty(vim.fn.expand("%:t")) ~= 1 and vim.bo.buftype == "" then
 			vim.cmd("write")
 		end
 	end,
 })
 
--- sessions
+-- auto recover sessions
 vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
 		local buf_name = vim.api.nvim_buf_get_name(0)
@@ -671,12 +688,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	end,
 })
 
--- 自动加载
-
-vim.opt.autoread = true
-vim.opt.updatetime = 100
-
--- 输入法切换
+-- ime change
 
 local config = {
 	default_im = "keyboard-us",
@@ -772,20 +784,3 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 		end
 	end,
 })
-
---lsp
-
-for _, server in ipairs(servers) do
-	vim.lsp.config(server.name, {
-		cmd = server.cmd,
-		filetypes = server.filetypes,
-		root_markers = { ".git", "go.mod", "package.json", "pyproject.toml" },
-	})
-	vim.lsp.enable(server.name)
-end
-
--- 诊断
-
-vim.keymap.set("n", "<leader>e", function()
-	vim.diagnostic.open_float()
-end)
