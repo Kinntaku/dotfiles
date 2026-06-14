@@ -1,3 +1,5 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 if vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
 	vim.cmd("cd " .. vim.fn.argv(0))
 end
@@ -183,17 +185,15 @@ vim.keymap.set({ "n", "x", "o" }, "`", function()
 	require("flash").jump()
 end)
 vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>")
-vim.keymap.set("n", "<leader>o", function()
+vim.keymap.set("n", "<leader>f", function()
 	require("telescope.builtin").find_files({ no_ignore = true, hidden = true })
 end)
-vim.keymap.set("n", "<A-S-f>", function()
+vim.keymap.set("n", "<leader>F", function()
 	require("telescope.builtin").live_grep({ additional_args = { "--no-ignore", "--hidden" } })
 end)
 vim.keymap.set("n", "<A-t>", "<Cmd>TermSelect<CR>")
 
 -- settings
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
 vim.opt.modeline = false
 vim.o.modelines = 0
 vim.env.PATH = "/home/kinntaku/.nvm/versions/node/v24.13.0/bin:" .. vim.env.PATH
@@ -268,8 +268,8 @@ vim.keymap.set("t", "<A-k>", [[<C-\><C-n><C-w>k]])
 vim.keymap.set("t", "<A-l>", [[<C-\><C-n><C-w>l]])
 vim.keymap.set("n", "<leader>nt", ":tab split<CR>")
 vim.keymap.set("n", "<leader>ct", ":tabclose<CR>")
-vim.keymap.set({ "n", "v", "i" }, "<A-Q>", "<Cmd>tabnext<CR>")
-vim.keymap.set({ "n", "v", "i" }, "<A-E>", "<Cmd>tabprevious<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<A-E>", "<Cmd>tabnext<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<A-Q>", "<Cmd>tabprevious<CR>")
 vim.keymap.set("t", "<A-E>", "<C-\\><C-n><Cmd>tabnext<CR>")
 vim.keymap.set("t", "<A-Q>", "<C-\\><C-n><Cmd>tabprevious<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<M-g>", "<Cmd>vertical resize -5<CR>")
