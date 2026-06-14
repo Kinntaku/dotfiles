@@ -5,7 +5,6 @@ local function LATEX_COMPILE()
 	local file_name = vim.fn.expand("%:t")
 
 	if ext == "tex" then
-		-- === 你的原始逻辑，一行未动 ===
 		print("Compiling")
 		local prepare_cmd =
 			string.format("podman exec -w '%s' texlive-container sh -c 'mkdir -p tmp && chmod 777 tmp'", file_dir)
@@ -33,10 +32,8 @@ local function LATEX_COMPILE()
 				end
 			end,
 		})
-		-- === 原始逻辑结束 ===
 	elseif ext == "typ" then
 		vim.fn.system(string.format("mkdir -p '%s/tmp'", file_dir))
-		-- 直接使用 file_name 编译，输出到 tmp/ 下 (文件名不变，后缀改为 pdf)
 		local output = "tmp/" .. file_name:gsub("%.typ$", ".pdf")
 		local cmd = { "typst", "compile", file_name, output }
 		vim.fn.jobstart(cmd, {
@@ -64,7 +61,6 @@ local function LATEX_VIEW()
 
 	local line = vim.fn.line(".")
 	local col = vim.fn.col(".")
-
 
 	vim.fn.jobstart({
 		"zathura",

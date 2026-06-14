@@ -96,8 +96,9 @@ end)
 require("ibl").setup({ indent = { highlight = highlight } })
 require("flash").setup({})
 require("mini.comment").setup({})
-require("mini.pairs").setup({})
 require("lualine").setup({})
+require("mini.pairs").setup({})
+vim.keymap.set("i", "<BS>", "<BS>", { noremap = true, replace_keycodes = false })
 require("telescope").setup({})
 require("mason").setup({})
 require("mason-tool-installer").setup({
@@ -182,7 +183,7 @@ vim.keymap.set({ "n", "x", "o" }, "`", function()
 	require("flash").jump()
 end)
 vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>")
-vim.keymap.set("n", "<A-f>", function()
+vim.keymap.set("n", "<leader>o", function()
 	require("telescope.builtin").find_files({ no_ignore = true, hidden = true })
 end)
 vim.keymap.set("n", "<A-S-f>", function()
@@ -318,7 +319,10 @@ vim.keymap.set("v", "<", "<gv", { remap = false })
 vim.keymap.set("v", ">", ">gv", { remap = false })
 
 -- clean noh
-vim.keymap.set({ "n", "v", "i" }, "<C-f>", "<cmd>noh<CR>")
+vim.keymap.set({ "n", "v", "i" }, "<A-F>", "<cmd>noh<CR>")
+-- 在 Visual 模式下绑定 C-f
+vim.keymap.set("x", "<A-f>", [[y/<C-r>=escape(@", '/\')<CR><CR>]])
+vim.keymap.set("x", "<C-f>", [[y:%s/<C-r>=escape(@", '/\')<CR>//g<Left><Left>]])
 
 -- complex keybings
 
