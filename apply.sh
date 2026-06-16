@@ -35,11 +35,11 @@ OTHERS_MAP=(
 	# ["settings.json"]="$HOME/.config/VSCodium/User"
 	# ["keybindings.json"]="$HOME/.config/VSCodium/User"
 	# ["tasks.json"]="$HOME/.config/VSCodium/User"
-	["custom_phrase.txt"]="$HOME/.local/share/fcitx5/rime/"
 	["default.custom.yaml"]="$HOME/.local/share/fcitx5/rime/"
-	["wanxiang.custom.yaml"]="$HOME/.local/share/fcitx5/rime/"
 	["opencode.json"]="$HOME/.config/opencode/"
-	["auth.json"]="$HOME/.local/share/opencode/"
+	["wanxiang.custom.yaml"]="$HOME/.local/share/fcitx5/rime/"
+	["../personal/custom_phrase.txt"]="$HOME/.local/share/fcitx5/rime/"
+	["../personal/auth.json"]="$HOME/.local/share/opencode/"
 )
 
 for item in "${!OTHERS_MAP[@]}"; do

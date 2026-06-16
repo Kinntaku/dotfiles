@@ -24,15 +24,6 @@ fi
 unset __mamba_setup
 # <<< mamba initialize <<<
 
-# NVM
-if [ -s "/usr/share/nvm/init-nvm.sh" ]; then
-  function nvm node npm npx pnpm yarn {
-    unset -f nvm node npm npx pnpm yarn
-    [ -s "/usr/share/nvm/init-nvm.sh" ] && source "/usr/share/nvm/init-nvm.sh"
-    "$0" "$@"
-  }
-fi
-
 # starship
 if [[ "$TERM" != "linux" ]]; then
     source <(starship init zsh)

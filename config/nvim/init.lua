@@ -196,7 +196,6 @@ vim.keymap.set("n", "<A-t>", "<Cmd>TermSelect<CR>")
 -- settings
 vim.opt.modeline = false
 vim.o.modelines = 0
-vim.env.PATH = "/home/kinntaku/.nvm/versions/node/v24.13.0/bin:" .. vim.env.PATH
 vim.opt.clipboard = "unnamedplus"
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,localoptions"
 vim.opt.number = true

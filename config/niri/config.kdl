@@ -19,7 +19,7 @@ output "eDP-1" {
 	position x=0 y=1080
 }
 
-output "DP-4" {
+output "PNP(AOC) 25G3WS3R4 QTXN4HA010052" {
     mode "1920x1080@165.003006"
 	position x=0 y=0
 }
@@ -63,6 +63,7 @@ spawn-at-startup "flclash"
 spawn-at-startup "waybar"
 spawn-at-startup "fcitx5"
 spawn-at-startup "mako"
+spawn-at-startup "swayidle" "-w" "before-sleep" "swaylock -f"
 spawn-at-startup "awww-daemon"
 spawn-at-startup "blueman-applet"
 spawn-at-startup "nm-applet"
@@ -161,7 +162,7 @@ binds {
     XF86Launch3 {spawn "rog-control-center";}
     XF86Calculator {spawn "qalculate-qt";}
 	XF86TouchpadToggle {spawn "zsh" "-c" "$DOTFILES/scripts/touchpad_toggle.sh";} // 开启关闭触摸板
-    Ctrl+Shift+Escape {spawn "kitty" "btop";}
+    Ctrl+Shift+Escape {spawn "kitty" "htop";}
     Alt+Space { spawn "sh" "-c" "kitty --class=navi-window -e navi --path $DOTFILES/navi"; }
     Mod+Shift+Q { spawn-sh "GSK_RENDERER=cairo GTK_THEME=Default ADW_DISABLE_PORTAL=1 copyq read image/png > /tmp/temp_image.png && satty --filename /tmp/temp_image.png"; }
     Mod+T { spawn "kitty"; }
