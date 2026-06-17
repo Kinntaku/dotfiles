@@ -103,6 +103,7 @@ require("mini.pairs").setup({})
 vim.keymap.set("i", "<BS>", "<BS>", { noremap = true, replace_keycodes = false })
 require("telescope").setup({})
 require("mason").setup({})
+require("stickybuf").setup()
 require("mason-tool-installer").setup({
 	ensure_installed = vim.list_extend(lsp_servers_install, formatters),
 	auto_update = false,
@@ -189,7 +190,15 @@ vim.keymap.set("n", "<leader>f", function()
 	require("telescope.builtin").find_files({ no_ignore = true, hidden = true })
 end)
 vim.keymap.set("n", "<leader>F", function()
-	require("telescope.builtin").live_grep({ additional_args = { "--no-ignore", "--hidden" } })
+	require("telescope.builtin").live_grep({
+		additional_args = { "--no-ignore", "--hidden" },
+	})
+end)
+vim.keymap.set("n", "<leader>l", function()
+	require("telescope.builtin").buffers({
+		sort_mru = true,
+		initial_mode = "normal",
+	})
 end)
 vim.keymap.set("n", "<A-t>", "<Cmd>TermSelect<CR>")
 

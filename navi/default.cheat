@@ -24,3 +24,6 @@ zsh -ci /home/kinntaku/user_dotfiles/bin/onload_nvidia.sh
 
 # rclone
 rclone serve http . --addr :8080
+
+# batch mp42gif
+for i in *.mp4; do ffmpeg -i "$i" -vf "fps=15,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" "${i%.mp4}.gif"; done
