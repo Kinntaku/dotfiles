@@ -4,3 +4,7 @@ image/jpeg=XnView.desktop
 image/webp=XnView.desktop
 image/gif=XnView.desktop;
 application/pdf=org.pwmt.zathura.desktop
+text/markdown=chromium.desktop;
+application/zip=xarchiver.desktop;
+application/7z=xarchiver.desktop;
+text/plain=nvim.desktop;

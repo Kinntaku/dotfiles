@@ -5,11 +5,27 @@
         "clock",
         "group/cpu",
         "group/memory",
-        "niri/window"
+        // "niri/window",
+		"dwl/window"
     ],
     "modules-center": [
-        "niri/workspaces"
+        // "niri/workspaces",
+		"ext/workspaces",
     ],
+    "dwl/window": {
+		"format": "{title}",
+        "icon": true,
+        "icon-size": 20,
+        "rotate": 270,
+        "max-length": 30
+	},
+	"ext/workspaces": {
+		// "format": "{icon}",
+		"ignore-hidden": true,
+		"on-click": "activate",
+		"on-click-right": "deactivate",
+		"sort-by-id": true
+    },
     "modules-right": [
         "group/backlight",
         "group/audio",
@@ -21,7 +37,8 @@
     //left
     //clock
     "clock": {
-        "format": "{:%H\n%M\n--\n%d\n%m}"
+        "format": "{:%H\n%M\n--\n%d\n%m}",
+        "tooltip-format": false
     },
     //cpu
     "group/cpu": {
@@ -51,13 +68,20 @@
     "memory#value": {
         "format": "{percentage}%"
     },
-    "niri/window": {
+    "wlr/window": {
         "format": "{}",
         "icon": true,
         "icon-size": 20,
         "rotate": 270,
         "max-length": 30
     },
+    // "niri/window": {
+    //     "format": "{}",
+    //     "icon": true,
+    //     "icon-size": 20,
+    //     "rotate": 270,
+    //     "max-length": 30
+    // },
     //right
     //backlight
     "group/backlight": {

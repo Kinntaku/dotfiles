@@ -34,8 +34,9 @@ export NAVI_PATH="$HOME/user_dotfiles/navi"
 
 alias prime-run='__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia '
 alias nv='print -z $(navi --print)'
-alias ls=lsd
-alias tree='lsd --tree'
+alias ls='eza --icons=always'
+alias tree='eza --icons=always --tree'
+alias vi="nvim"
 alias ff=fastfetch
 alias conda='micromamba'
 alias docker='podman'

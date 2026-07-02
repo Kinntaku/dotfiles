@@ -70,6 +70,7 @@ vim.pack.add({
 	{ src = "https://github.com/echasnovski/mini.pairs" },
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
 	{ src = "https://github.com/nvim-mini/mini.nvim" },
+	{ src = "https://github.com/kylechui/nvim-surround" },
 })
 
 -- indent line
@@ -104,6 +105,7 @@ vim.keymap.set("i", "<BS>", "<BS>", { noremap = true, replace_keycodes = false }
 require("telescope").setup({})
 require("mason").setup({})
 require("stickybuf").setup()
+require("nvim-surround").setup()
 require("mason-tool-installer").setup({
 	ensure_installed = vim.list_extend(lsp_servers_install, formatters),
 	auto_update = false,

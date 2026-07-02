@@ -1,0 +1,13 @@
+profile dual {
+    output "DP-4" enable mode 1920x1080@165.003006Hz
+    output "eDP-1" disable
+}
+
+profile single {
+    output "eDP-1" enable mode 2560x1600@165.002Hz scale 1.5
+}
+
+profile sleep {
+    output "DP-4" disable
+    output "eDP-1" enable mode 2560x1600@165.002Hz scale 1.5
+}

@@ -1,4 +1,5 @@
 environment{
+	TERMINAL "kitty"
     QT_QPA_PLATFORMTHEME "qt6ct"
     DOTFILES "/home/kinntaku/user_dotfiles"
 }
@@ -6,6 +7,8 @@ environment{
 input {
     keyboard {
         numlock
+		xkb {
+		}
     }
     touchpad {
         tap
@@ -60,7 +63,7 @@ layer-rule {
 }
 
 spawn-at-startup "flclash"
-spawn-at-startup "waybar"
+spawn-at-startup "bash" "-c" "waybar -c ~/.config/waybar/niri_config.jsonc"
 spawn-at-startup "fcitx5"
 spawn-at-startup "mako"
 spawn-at-startup "swayidle" "-w" "before-sleep" "swaylock -f"
@@ -68,6 +71,7 @@ spawn-at-startup "awww-daemon"
 spawn-at-startup "blueman-applet"
 spawn-at-startup "nm-applet"
 spawn-at-startup "copyq" "--start-server"
+// spawn-at-startup "lxqt-policykit-agent"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 spawn-at-startup "bash" "-c" "xrdb -merge ~/.Xresources"
 spawn-at-startup "bash" "-c" "sleep 2 && rog-control-center"
@@ -76,22 +80,29 @@ screenshot-path null
 
 window-rule {
     match app-id="kitty"
-    opacity 0.9
+    opacity 0.85
     draw-border-with-background false
 }    
 
 
 window-rule {
-    match app-id="neovide"
-    opacity 0.9
+    match app-id="qqmusic"
+    opacity 0.8
     draw-border-with-background false
 }    
 
-window-rule {
-    match app-id="codium"
-    opacity 0.92
-    draw-border-with-background false
-}
+
+// window-rule {
+//     match app-id="neovide"
+//     opacity 0.9
+//     draw-border-with-background false
+// }    
+
+// window-rule {
+//     match app-id="codium"
+//     opacity 0.92
+//     draw-border-with-background false
+// }
 
 window-rule {
     match app-id="copyq"
@@ -107,10 +118,10 @@ window-rule {
     default-column-width { proportion 0.5; }
 }
 
-window-rule {
-    match app-id="Xephyr"
-    open-floating false
-}
+// window-rule {
+//     match app-id="Xephyr"
+//     open-floating false
+// }
 
 window-rule {
     match app-id="satty"
@@ -159,6 +170,7 @@ binds {
     Mod+V     { spawn "copyq" "toggle"; }
     Mod+X     { spawn-sh "$DOTFILES/scripts/power.sh"; }
     Mod+L     { spawn "swaylock"; }
+	Mod+Ctrl+V {spawn "pavucontrol";}
     XF86Launch3 {spawn "rog-control-center";}
     XF86Calculator {spawn "qalculate-qt";}
 	XF86TouchpadToggle {spawn "zsh" "-c" "$DOTFILES/scripts/touchpad_toggle.sh";} // 开启关闭触摸板

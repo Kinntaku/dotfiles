@@ -1,0 +1,4 @@
+LANG=zh_CN.UTF-8
+LC_ALL=zh_CN.UTF-8
+QT_QPA_PLATFORMTHEME=qt6ct
+DOTFILES=/home/kinntaku/user_dotfiles

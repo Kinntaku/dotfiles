@@ -1,0 +1,13 @@
+kanshi &
+flclash &
+waybar -c ~/.config/waybar/labwc-config.jsonc &
+fcitx5 &
+mako &
+swayidle -w before-sleep swaylock -f &
+awww-daemon &
+blueman-applet &
+nm-applet &
+copyq --start-server &
+lxqt-policykit-agent &
+xrdb -merge ~/.Xresources &
+(sleep 2 && rog-control-center) &

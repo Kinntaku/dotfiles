@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<labwc_config>
+  <core>
+    <decoration>server</decoration>
+    <gap>5</gap>
+    <autoEnableOutputs>yes</autoEnableOutputs>
+    <primarySelection>yes</primarySelection>
+  </core>
+  <theme>
+    <name>Velnias</name>
+  </theme>
+  <desktops>
+    <number>5</number>
+    <firstdesk>1</firstdesk>
+    <names>
+      <name>1</name>
+      <name>2</name>
+      <name>3</name>
+      <name>4</name>
+      <name>5</name>
+    </names>
+    <popupTime>875</popupTime>
+  </desktops>
+  <keyboard>
+    <default></default>
+    <!-- Alt+Tab window switching -->
+    <keybind key="A-Tab">
+      <action name="NextWindow"></action>
+    </keybind>
+    <!-- Media keys -->
+    <keybind key="XF86AudioRaiseVolume">
+      <action command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86AudioLowerVolume">
+      <action command="wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86AudioMute">
+      <action command="wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86AudioMicMute">
+      <action command="wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86AudioPlay">
+      <action command="playerctl play-pause" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86AudioPrev">
+      <action command="playerctl previous" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86AudioNext">
+      <action command="playerctl next" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86MonBrightnessUp">
+      <action command="brightnessctl --class=backlight set +10%" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86MonBrightnessDown">
+      <action command="brightnessctl --class=backlight set 10%-" name="Execute"></action>
+    </keybind>
+    <!-- Application launchers -->
+    <keybind key="W-grave">
+      <action command="fuzzel" name="Execute"></action>
+    </keybind>
+    <keybind key="W-v">
+      <action command="copyq toggle" name="Execute"></action>
+    </keybind>
+    <keybind key="W-x">
+      <action command="/home/kinntaku/user_dotfiles/scripts/power.sh" name="Execute"></action>
+    </keybind>
+    <keybind key="W-l">
+      <action command="swaylock" name="Execute"></action>
+    </keybind>
+    <keybind key="W-C-v">
+      <action command="pavucontrol" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86Launch3">
+      <action command="rog-control-center" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86Calculator">
+      <action command="qalculate-qt" name="Execute"></action>
+    </keybind>
+    <keybind key="XF86TouchpadToggle">
+      <action command="zsh -c /home/kinntaku/user_dotfiles/scripts/touchpad_toggle.sh" name="Execute"></action>
+    </keybind>
+    <keybind key="C-S-Escape">
+      <action command="kitty htop" name="Execute"></action>
+    </keybind>
+    <keybind key="A-Space">
+      <action command="kitty --class=navi-window -e navi --path /home/kinntaku/user_dotfiles/navi" name="Execute"></action>
+    </keybind>
+    <keybind key="W-S-q">
+      <action command="sh -c 'GSK_RENDERER=cairo GTK_THEME=Default ADW_DISABLE_PORTAL=1 copyq read image/png > /tmp/temp_image.png &amp;&amp; satty --filename /tmp/temp_image.png'" name="Execute"></action>
+    </keybind>
+    <keybind key="W-t">
+      <action command="kitty" name="Execute"></action>
+    </keybind>
+    <keybind key="W-e">
+      <action command="thunar" name="Execute"></action>
+    </keybind>
+    <keybind key="W-F1">
+      <action command="wlr-randr --output eDP-1 --toggle" name="Execute"></action>
+    </keybind>
+    <keybind key="W-F2">
+      <action command="ddcutil setvcp 10 - 10" name="Execute"></action>
+    </keybind>
+    <keybind key="W-F3">
+      <action command="ddcutil setvcp 10 + 10" name="Execute"></action>
+    </keybind>
+    <!-- Screenshots -->
+    <keybind key="Print">
+      <action command="grim - | wl-copy" name="Execute"></action>
+    </keybind>
+    <keybind key="W-q">
+      <action command="/home/kinntaku/.config/labwc/screenshot.sh" name="Execute"></action>
+    </keybind>
+    <!-- WM actions -->
+    <keybind key="A-F4">
+      <action name="Close"></action>
+    </keybind>
+    <keybind key="W-f">
+      <action name="ToggleMaximize"></action>
+    </keybind>
+    <keybind key="W-S-f">
+      <action name="ToggleDecorations"></action>
+    </keybind>
+    <keybind key="F11">
+      <action name="ToggleFullscreen"></action>
+    </keybind>
+    <keybind key="W-S-e">
+      <action name="Exit"></action>
+    </keybind>
+    <keybind key="W-r">
+      <action name="Reconfigure"></action>
+    </keybind>
+    <!-- Mouse emulation for workspace switching (niri uses WheelScroll) -->
+    <keybind key="W-Left">
+      <action name="GoToDesktop" to="left" wrap="yes"></action>
+    </keybind>
+    <keybind key="W-Right">
+      <action name="GoToDesktop" to="right" wrap="yes"></action>
+    </keybind>
+    <!-- Workspace navigation -->
+    <keybind key="W-s">
+      <action name="GoToDesktop" to="right" wrap="yes"></action>
+    </keybind>
+    <keybind key="W-w">
+      <action name="GoToDesktop" to="left" wrap="yes"></action>
+    </keybind>
+    <!-- Switch to workspace 1-9 -->
+    <keybind key="W-2">
+      <action index="1" name="GoToDesktop"></action>
+    </keybind>
+    <keybind key="W-3">
+      <action index="2" name="GoToDesktop"></action>
+    </keybind>
+    <keybind key="W-4">
+      <action index="3" name="GoToDesktop"></action>
+    </keybind>
+    <keybind key="W-5">
+      <action index="4" name="GoToDesktop"></action>
+    </keybind>
+    <keybind key="W-6">
+      <action index="5" name="GoToDesktop"></action>
+    </keybind>
+    <keybind key="W-7">
+      <action index="6" name="GoToDesktop"></action>
+    </keybind>
+    <!-- Send window to workspace -->
+    <keybind key="W-S-s">
+      <action name="SendToDesktop" to="right" wrap="yes"></action>
+    </keybind>
+    <keybind key="W-S-w">
+      <action name="SendToDesktop" to="left" wrap="yes"></action>
+    </keybind>
+    <keybind key="W-S-2">
+      <action index="1" name="SendToDesktop"></action>
+    </keybind>
+    <keybind key="W-S-3">
+      <action index="2" name="SendToDesktop"></action>
+    </keybind>
+    <keybind key="W-S-4">
+      <action index="3" name="SendToDesktop"></action>
+    </keybind>
+    <keybind key="W-S-5">
+      <action index="4" name="SendToDesktop"></action>
+    </keybind>
+    <keybind key="W-S-6">
+      <action index="5" name="SendToDesktop"></action>
+    </keybind>
+    <keybind key="W-S-7">
+      <action index="6" name="SendToDesktop"></action>
+    </keybind>
+    <!-- Directional focus (maps from niri column/window focus) -->
+    <keybind key="W-a">
+      <action name="FocusLeft"></action>
+    </keybind>
+    <keybind key="W-d">
+      <action name="FocusRight"></action>
+    </keybind>
+    <keybind key="W-C-s">
+      <action name="FocusDown"></action>
+    </keybind>
+    <keybind key="W-C-w">
+      <action name="FocusUp"></action>
+    </keybind>
+    <!-- Center window (maps from niri center-column) -->
+    <keybind key="W-c">
+      <action name="MoveToCenter"></action>
+    </keybind>
+  </keyboard>
+  <libinput>
+    <device category="touchpad">
+      <naturalScroll>yes</naturalScroll>
+      <tapToClick>yes</tapToClick>
+      <pointerAcceleration>0.5</pointerAcceleration>
+    </device>
+  </libinput>
+  <theme>
+    <name>Velnias</name>
+  </theme>
+  <windowRules>
+    <windowRule identifier="kitty">
+      <opacity>0.9</opacity>
+    </windowRule>
+    <windowRule identifier="neovide">
+      <opacity>0.9</opacity>
+    </windowRule>
+    <windowRule identifier="codium">
+      <opacity>0.92</opacity>
+    </windowRule>
+  </windowRules>
+</labwc_config>
