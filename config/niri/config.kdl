@@ -182,6 +182,7 @@ binds {
 	Mod+F1 allow-when-locked=true {spawn "wlr-randr" "--output" "eDP-1" "--toggle";}
     Mod+F2 allow-when-locked=true { spawn "ddcutil" "setvcp" "10" "-" "10"; }
     Mod+F3 allow-when-locked=true { spawn "ddcutil" "setvcp" "10" "+" "10"; }
+    Mod+F4 allow-when-locked=true { spawn "zsh" "-c" "$DOTFILES/scripts/wlsunset.sh"; }
 
     // niri ipc
     Mod+Shift+Slash { show-hotkey-overlay; }
