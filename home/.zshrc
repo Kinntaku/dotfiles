@@ -29,8 +29,10 @@ if [[ "$TERM" != "linux" ]]; then
     source <(starship init zsh)
 fi
 
+export PATH="$PATH:/home/kinntaku/.cargo/bin"
+
 export DOCKER_HOST=unix:///run/user/1000/podman/podman.sock
-export NAVI_PATH="$HOME/user_dotfiles/navi"
+export NAVI_PATH="$DOTFILES/navi"
 
 alias prime-run='__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=NVIDIA_only __GLX_VENDOR_LIBRARY_NAME=nvidia '
 alias nv='print -z $(navi --print)'

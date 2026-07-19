@@ -134,6 +134,7 @@ require("nvim-tree").setup({
 	actions = { change_dir = { enable = false } },
 	renderer = { root_folder_label = false },
 })
+require("nvim-treesitter").install({ "python", "latex", "bibtex", "tex", "lua", "vim", "vimdoc" })
 require("gitsigns").setup({
 	on_attach = function(bufnr)
 		local gs = require("gitsigns")
@@ -232,7 +233,7 @@ vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-
+vim.keymap.set("v", "p", '"_dP')
 -- disable notify
 vim.notify = function(msg, log_level, _opts)
 	if msg:find("require('lspconfig')") then
@@ -242,6 +243,10 @@ end
 
 -- lsp设置
 for _, server in ipairs(servers) do
+	if server.name == "clangd" then
+		current_cmd = current_cmd or { "clangd" }
+		table.insert(current_cmd, "--query-driver=**/*xtensa*gcc*,**/*xtensa*g++*,**/*riscv*gcc*,**/*riscv*g++*")
+	end
 	vim.lsp.config(server.name, {
 		cmd = server.cmd,
 		filetypes = server.filetypes,
@@ -249,7 +254,7 @@ for _, server in ipairs(servers) do
 	})
 	vim.lsp.enable(server.name)
 end
-
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true })
 -- functional keybindings
 
 -- open diagnostic panel
@@ -499,6 +504,15 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
 	end,
 })
 
+-- autoload
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+	pattern = "*",
+	callback = function()
+		if vim.fn.mode() ~= "c" then
+			vim.cmd("checktime")
+		end
+	end,
+})
 -- forbid editing binary file
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 	callback = function()
@@ -510,6 +524,25 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 				vim.bo.readonly = true
 				vim.bo.modifiable = false
 			end
+		end
+	end,
+})
+
+-- forbid editing file outside the workspace
+
+vim.api.nvim_create_autocmd("BufReadPost", {
+	group = vim.api.nvim_create_augroup("WorkspaceReadOnlyProtect", { clear = true }),
+	callback = function(args)
+		local cwd = vim.fn.getcwd()
+		local buf_name = vim.api.nvim_buf_get_name(args.buf)
+		if buf_name == "" or vim.bo[args.buf].buftype ~= "" then
+			return
+		end
+		local absolute_buf_name = vim.fn.fnamemodify(buf_name, ":p")
+		local absolute_cwd = vim.fn.fnamemodify(cwd, ":p")
+		if string.sub(absolute_buf_name, 1, string.len(absolute_cwd)) ~= absolute_cwd then
+			vim.bo[args.buf].readonly = true
+			vim.bo[args.buf].modifiable = false
 		end
 	end,
 })

@@ -1,14 +1,14 @@
 environment{
 	TERMINAL "kitty"
     QT_QPA_PLATFORMTHEME "qt6ct"
-    DOTFILES "/home/kinntaku/user_dotfiles"
+    DOTFILES "/home/kinntaku/dotfiles"
+	LANG "zh_CN.UTF-8"
+	TERMINAL "kitty"
 }
 
 input {
     keyboard {
         numlock
-		xkb {
-		}
     }
     touchpad {
         tap
@@ -24,6 +24,7 @@ output "eDP-1" {
 
 output "PNP(AOC) 25G3WS3R4 QTXN4HA010052" {
     mode "1920x1080@165.003006"
+	// variable-refresh-rate
 	position x=0 y=0
 }
 
@@ -32,6 +33,7 @@ layout {
     gaps 5
     focus-ring {
         width 2
+		active-gradient from="violet" to="blue" angle=45 in="oklch longer hue"
         active-color "#89dceb"
     }
 }
@@ -74,6 +76,7 @@ spawn-at-startup "copyq" "--start-server"
 // spawn-at-startup "lxqt-policykit-agent"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 spawn-at-startup "bash" "-c" "xrdb -merge ~/.Xresources"
+spawn-at-startup "sh" "-c" "$DOTFILES/scripts/cover_mineapps.sh"
 spawn-at-startup "bash" "-c" "sleep 2 && rog-control-center"
 prefer-no-csd
 screenshot-path null
@@ -169,6 +172,7 @@ binds {
     Mod+Grave { spawn "fuzzel"; }
     Mod+V     { spawn "copyq" "toggle"; }
     Mod+X     { spawn-sh "$DOTFILES/scripts/power.sh"; }
+    // Ctrl+Space     { spawn-sh "$DOTFILES/scripts/window_jump.sh"; }
     Mod+L     { spawn "swaylock"; }
 	Mod+Ctrl+V {spawn "pavucontrol";}
     XF86Launch3 {spawn "rog-control-center";}

@@ -38,6 +38,7 @@ OTHERS_MAP=(
 	["default.custom.yaml"]="$HOME/.local/share/fcitx5/rime/"
 	["opencode.json"]="$HOME/.config/opencode/"
 	["wanxiang.custom.yaml"]="$HOME/.local/share/fcitx5/rime/"
+	["nvim.desktop"]="$HOME/.local/share/applications/"
 	["../personal/custom_phrase.txt"]="$HOME/.local/share/fcitx5/rime/"
 	["../personal/auth.json"]="$HOME/.local/share/opencode/"
 )

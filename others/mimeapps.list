@@ -8,3 +8,5 @@ text/markdown=chromium.desktop;
 application/zip=xarchiver.desktop;
 application/7z=xarchiver.desktop;
 text/plain=nvim.desktop;
+text/csv=nvim.desktop;
+
