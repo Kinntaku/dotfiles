@@ -39,7 +39,8 @@ alias nv='print -z $(navi --print)'
 alias ls='eza --icons=always'
 alias tree='eza --icons=always --tree'
 alias vi="nvim"
-alias ff=fastfetch
+alias fastfetch="fastfetch --logo-position top --logo small --logo arch"
+alias ff="fastfetch"
 alias conda='micromamba'
 alias docker='podman'
 alias snvim='sudo -E nvim'

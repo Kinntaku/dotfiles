@@ -1,0 +1,18 @@
+% pio
+
+# search board
+pio boards x
+
+# create board
+pio init --board x
+
+# pio compile clangd config
+pio run -t compiledb
+
+# pio upload
+pio run -t upload
+
+# pio monitor
+pio device monitor
+
+

@@ -1,0 +1,6 @@
+% clean
+# pio clean
+pio system prune
+
+# paru clean
+paru -Scc

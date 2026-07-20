@@ -1,0 +1,10 @@
+CompileFlags:
+  Add: ["-target", "xtensa", "-D__XTENSA__=1", "-ferror-limit=0"]
+  Remove:
+    [
+      "-fno-tree-switch-conversion",
+      "-mtext-section-literals",
+      "-mlongcalls",
+      "-fstrict-volatile-bitfields",
+      "-mdisable-hardware-atomics",
+    ]

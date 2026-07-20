@@ -78,6 +78,7 @@ spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 spawn-at-startup "bash" "-c" "xrdb -merge ~/.Xresources"
 spawn-at-startup "sh" "-c" "$DOTFILES/scripts/cover_mineapps.sh"
 spawn-at-startup "bash" "-c" "sleep 2 && rog-control-center"
+spawn-at-startup "kitty" "zsh" "-i" "-c" "fastfetch; exec zsh"
 prefer-no-csd
 screenshot-path null
 
@@ -172,7 +173,7 @@ binds {
     Mod+Grave { spawn "fuzzel"; }
     Mod+V     { spawn "copyq" "toggle"; }
     Mod+X     { spawn-sh "$DOTFILES/scripts/power.sh"; }
-    // Ctrl+Space     { spawn-sh "$DOTFILES/scripts/window_jump.sh"; }
+    Alt+Shift+Space     { spawn-sh "$DOTFILES/scripts/window_jump.sh"; }
     Mod+L     { spawn "swaylock"; }
 	Mod+Ctrl+V {spawn "pavucontrol";}
     XF86Launch3 {spawn "rog-control-center";}
