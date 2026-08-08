@@ -1,20 +1,23 @@
 # pdf translate
-podman run --rm -p 7860:7860 docker.io/awwaawwa/pdfmathtranslate-next
+kitty --detach podman run --rm -p 7860:7860 docker.io/awwaawwa/pdfmathtranslate-next
 
 # fresh nvidia container yaml
 sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml
 
 # lazydocker
-zsh -ci 'lazydocker'
+kitty --detach zsh -ci 'lazydocker'
 
 # remove useless package
 sudo pacman -Rs $(pacman -Qdtq)
 
 # Offload Nvidia
-zsh -ci /home/kinntaku/user_dotfiles/bin/offload_nvidia.sh
+kitty --detach zsh -ci /home/kinntaku/user_dotfiles/bin/offload_nvidia.sh
 
 # Onload Nvidia
-zsh -ci /home/kinntaku/user_dotfiles/bin/onload_nvidia.sh
+kitty --detach zsh -ci /home/kinntaku/user_dotfiles/bin/onload_nvidia.sh
+
+# touchpad toggle
+zsh -ci $DOTFILES/scripts/touchpad_toggle.sh
 
 # 7z compress
 7z a -mx=0 -mmt=on x.7z ./*
@@ -23,7 +26,7 @@ zsh -ci /home/kinntaku/user_dotfiles/bin/onload_nvidia.sh
 7z x x.7z
 
 # rclone
-rclone serve http . --addr :8080
+kitty --detach rclone serve http . --addr :8080
 
 # batch mp42gif
 for i in *.mp4; do ffmpeg -i "$i" -vf "fps=15,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" "${i%.mp4}.gif"; done

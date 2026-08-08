@@ -129,7 +129,7 @@ return {
 		end,
 	},
 	{ "git resume", "Telescope git_bcommits" },
-	{ "refresh sessions", "SessionSave" },
+	{ "refresh sessions", "AutoSession save" },
 	{ "git submit", FILE_COMMIT },
 	{
 		"opencode",
@@ -146,4 +146,5 @@ return {
 			end)
 		end,
 	},
+	{ "python venv", "VenvSelect" },
 }

@@ -71,6 +71,7 @@ vim.pack.add({
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
 	{ src = "https://github.com/nvim-mini/mini.nvim" },
 	{ src = "https://github.com/kylechui/nvim-surround" },
+	{ src = "https://github.com/linux-cultist/venv-selector.nvim" },
 })
 
 -- indent line
@@ -99,7 +100,21 @@ end)
 require("ibl").setup({ indent = { highlight = highlight } })
 require("flash").setup({})
 require("mini.comment").setup({})
-require("lualine").setup({})
+require("lualine").setup({
+	sections = {
+		lualine_a = { "mode" },
+		lualine_b = { "branch", "diff", "diagnostics" },
+		lualine_c = { "filename" },
+		lualine_x = {
+			"venv-selector", -- This is what makes lualine call the function in options.statusline_func.lualine
+			"encoding",
+			"fileformat",
+			"filetype",
+		},
+		-- lualine_y = { "progress" },
+		lualine_z = { "location" },
+	},
+})
 require("mini.pairs").setup({})
 vim.keymap.set("i", "<BS>", "<BS>", { noremap = true, replace_keycodes = false })
 require("telescope").setup({})
@@ -235,11 +250,11 @@ vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.keymap.set("v", "p", '"_dP')
 -- disable notify
-vim.notify = function(msg, log_level, _opts)
-	if msg:find("require('lspconfig')") then
-		return
-	end
-end
+-- vim.notify = function(msg, log_level, _opts)
+-- 	if msg:find("require('lspconfig')") then
+-- 		return
+-- 	end
+-- end
 
 -- lsp设置
 for _, server in ipairs(servers) do
@@ -533,17 +548,30 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 vim.api.nvim_create_autocmd("BufReadPost", {
 	group = vim.api.nvim_create_augroup("WorkspaceReadOnlyProtect", { clear = true }),
 	callback = function(args)
-		local cwd = vim.fn.getcwd()
 		local buf_name = vim.api.nvim_buf_get_name(args.buf)
 		if buf_name == "" or vim.bo[args.buf].buftype ~= "" then
 			return
 		end
+
 		local absolute_buf_name = vim.fn.fnamemodify(buf_name, ":p")
-		local absolute_cwd = vim.fn.fnamemodify(cwd, ":p")
-		if string.sub(absolute_buf_name, 1, string.len(absolute_cwd)) ~= absolute_cwd then
-			vim.bo[args.buf].readonly = true
-			vim.bo[args.buf].modifiable = false
+		local absolute_cwd = vim.fn.fnamemodify(vim.fn.getcwd(), ":p")
+
+		-- 1. 如果文件位于当前工作区内，正常放行
+		if string.sub(absolute_buf_name, 1, string.len(absolute_cwd)) == absolute_cwd then
+			return
 		end
+
+		-- 2. 如果文件不在工作区，检查是否为命令行启动时直接打开的文件 (argv)
+		local cli_files = vim.fn.argv()
+		for _, arg in ipairs(cli_files) do
+			if vim.fn.fnamemodify(arg, ":p") == absolute_buf_name then
+				return -- 仅对命令行指定的该独立文件放行
+			end
+		end
+
+		-- 3. 其他非工作区文件（如在 Vim 内使用 :e 打开的文件），一律锁定只读
+		vim.bo[args.buf].readonly = true
+		vim.bo[args.buf].modifiable = false
 	end,
 })
 
@@ -679,4 +707,18 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
 			im_timer:close()
 		end
 	end,
+})
+
+-- venv-selector
+
+require("venv-selector").setup({
+	options = {
+		fd_binary_name = "find",
+	},
+	search = {
+		micromamba = {
+			command = "find ~/micromamba/envs -name 'python*' -path '*/bin/python*'",
+			type = "anaconda",
+		},
+	},
 })

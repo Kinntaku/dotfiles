@@ -1,6 +1,7 @@
 environment{
 	TERMINAL "kitty"
     QT_QPA_PLATFORMTHEME "qt6ct"
+	QT_QPA_PLATFORM "wayland"
     DOTFILES "/home/kinntaku/dotfiles"
 	LANG "zh_CN.UTF-8"
 	TERMINAL "kitty"

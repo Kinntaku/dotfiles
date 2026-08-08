@@ -1,0 +1,7 @@
+% files
+
+# pacman
+kitty --detach nvim /etc/pacman.conf
+
+# dotfiles
+kitty --detach nvim ~/dotfiles

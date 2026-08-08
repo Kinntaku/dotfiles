@@ -1,7 +1,7 @@
 % applicatons
 
 # labelme
-zsh -ci "micromamba run -n labelme labelme"
+kitty --detach zsh -ci "micromamba run -n labelme labelme"
 
 # stm32cubemx
 $HOME/user_dotfiles/scripts/stm32cubemx.sh
