@@ -33,3 +33,6 @@ for i in *.mp4; do ffmpeg -i "$i" -vf "fps=15,scale=480:-1:flags=lanczos,split[s
 
 # reboot xdg-desktop-portal and pipewire
 systemctl --user restart xdg-desktop-portal xdg-desktop-portal-wlr pipewire wireplumber
+
+# reboot pipewire
+systemctl --user restart pipewire pipewire-pulse wireplumber

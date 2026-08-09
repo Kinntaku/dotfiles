@@ -331,6 +331,8 @@ vim.keymap.set({ "n", "v" }, "<A-w>", "<C-u>zz")
 vim.keymap.set({ "n", "v" }, "<A-s>", "<C-d>zz")
 vim.keymap.set({ "n", "v" }, "<A-a>", "10zh")
 vim.keymap.set({ "n", "v" }, "<A-d>", "10zl")
+vim.keymap.set({ "n", "v" }, "<A-W>", "<C-y>", { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "<A-S>", "<C-e>", { noremap = true, silent = true })
 
 -- delete without copy
 vim.keymap.set({ "n", "v" }, "d", '"_d')
@@ -507,18 +509,21 @@ end, { noremap = true, silent = true })
 
 -- automatics
 
--- enter instert mode when wnter terminal
+-- 仅在进入 opencode 终端时自动进入插入模式
 vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
-	pattern = { "term://*", "opencode", "lazygit" },
+	pattern = "*opencode*",
 	callback = function()
 		vim.schedule(function()
-			if vim.bo.buftype == "terminal" then
+			local bufname = vim.api.nvim_buf_get_name(0)
+			local ft = vim.bo.filetype
+
+			-- 检查是否为终端，且缓冲区名称或 filetype 包含 opencode
+			if vim.bo.buftype == "terminal" and (bufname:find("opencode") or ft == "opencode") then
 				vim.cmd("startinsert")
 			end
 		end)
 	end,
 })
-
 -- autoload
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
 	pattern = "*",

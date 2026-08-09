@@ -62,11 +62,19 @@ local function LATEX_VIEW()
 	local line = vim.fn.line(".")
 	local col = vim.fn.col(".")
 
+	-- vim.fn.jobstart({
+	-- 	"zathura",
+	-- 	"--synctex-forward",
+	-- 	string.format("%d:%d:%s", line, col, file_path),
+	-- 	pdf_path,
+	-- }, { detach = true })
+
+	local sync_arg = string.format("%s#src:%d %s", pdf_path, line, file_path)
+
 	vim.fn.jobstart({
-		"zathura",
-		"--synctex-forward",
-		string.format("%d:%d:%s", line, col, file_path),
-		pdf_path,
+		"okular",
+		"--unique",
+		sync_arg,
 	}, { detach = true })
 end
 
