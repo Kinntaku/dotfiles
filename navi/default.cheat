@@ -36,3 +36,12 @@ systemctl --user restart xdg-desktop-portal xdg-desktop-portal-wlr pipewire wire
 
 # reboot pipewire
 systemctl --user restart pipewire pipewire-pulse wireplumber
+
+# aria2c
+aria2c -x 16 -s 16 -k 1M
+
+# kill wps
+pkill wps && pkill wpp && pkill et 
+
+# fresh monitor
+$DOTFILES/scripts/fresh_monitor.sh

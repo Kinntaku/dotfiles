@@ -524,6 +524,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
 		end)
 	end,
 })
+
 -- autoload
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
 	pattern = "*",
@@ -727,3 +728,13 @@ require("venv-selector").setup({
 		},
 	},
 })
+
+-- mini.pair
+local toggle_minipairs = function()
+	if vim.g.minipairs_disable then
+		vim.g.minipairs_disable = false
+	else
+		vim.g.minipairs_disable = true
+	end
+end
+vim.keymap.set({ "i","v","n" }, "<A-p>", toggle_minipairs)
