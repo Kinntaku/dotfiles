@@ -5,3 +5,6 @@ kitty --detach zsh -ci "micromamba run -n labelme labelme"
 
 # matlab
 kitty --detach zsh -ci "$DOTFILES/scripts/matlab.sh" 
+
+# windows
+kitty --detach zsh -ci "$DOTFILES/scripts/win10.sh" 

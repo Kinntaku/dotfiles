@@ -181,7 +181,7 @@ binds {
     Mod+X     { spawn-sh "$DOTFILES/scripts/power.sh"; }
     Alt+Shift+Space     { spawn-sh "$DOTFILES/scripts/window_jump.sh"; }
     Mod+L     { spawn "swaylock"; }
-	Mod+Ctrl+V {spawn "pavucontrol";}
+	Mod+Ctrl+V {spawn "pavucontrol" "-t" "3";}
     XF86Launch3 {spawn "rog-control-center";}
     XF86Calculator {spawn "qalculate-qt";}
 	XF86TouchpadToggle {spawn "zsh" "-c" "$DOTFILES/scripts/touchpad_toggle.sh";} // 开启关闭触摸板
@@ -267,5 +267,7 @@ binds {
     Mod+Shift+H { set-window-height "+10%"; }
 
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
-    
+
+	Mod+F11 { spawn "sh" "-c" "echo 'device_add usb-host,id=realmouse,vendorid=0x046d,productid=0xc53f' | socat - UNIX-CONNECT:/tmp/qemu.sock"; }
+	Mod+F12 { spawn "sh" "-c" "echo 'device_del realmouse' | socat - UNIX-CONNECT:/tmp/qemu.sock"; } 
 }
