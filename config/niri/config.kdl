@@ -53,6 +53,11 @@ layout {
 //    ignore-drm-device "/dev/dri/by-path/pci-0000:01:00.0-render"
 //}
 
+debug {
+   // render-drm-device "/dev/dri/by-path/pci-0000:01:00.0-card"
+   // render-drm-device "/dev/dri/by-path/pci-0000:01:00.0-render"
+}
+
 animations{
     workspace-switch {
         duration-ms 200
@@ -95,6 +100,13 @@ screenshot-path null
 
 window-rule {
     match app-id="kitty"
+    opacity 0.85
+    draw-border-with-background false
+}    
+
+
+window-rule {
+    match app-id="neovide"
     opacity 0.85
     draw-border-with-background false
 }    
@@ -275,4 +287,6 @@ binds {
 
 	Mod+F11 { spawn "sh" "-c" "echo 'device_add usb-host,id=realmouse,vendorid=0x046d,productid=0xc53f' | socat - UNIX-CONNECT:/tmp/qemu.sock"; }
 	Mod+F12 { spawn "sh" "-c" "echo 'device_del realmouse' | socat - UNIX-CONNECT:/tmp/qemu.sock"; } 
+
+	Mod+F5 allow-when-locked=true { spawn "sh" "-c" "$DOTFILES/scripts/fresh_monitor.sh"; } 
 }

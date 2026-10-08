@@ -3,6 +3,9 @@ vim.g.maplocalleader = "\\"
 if vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
 	vim.cmd("cd " .. vim.fn.argv(0))
 end
+if vim.g.neovide then
+    vim.o.guifont = "JetBrainsMono Nerd Font:h14"
+end
 
 local lsp_servers_install = {
 	"lua-language-server", -- Lua
@@ -46,32 +49,33 @@ local servers = {
 }
 
 vim.pack.add({
-	{ src = "https://github.com/folke/flash.nvim" },
-	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim" },
-	{ src = "https://github.com/echasnovski/mini.comment" },
+	{ src = "https://github.com/folke/flash.nvim" }, -- 快速跳转
+	{ src = "https://github.com/lukas-reineke/indent-blankline.nvim" }, -- 彩虹缩进等距线条
+	{ src = "https://github.com/echasnovski/mini.comment" }, --快速注释
 	{ src = "https://github.com/sainnhe/everforest" },
-	{ src = "https://github.com/rmagatti/auto-session" },
-	{ src = "https://github.com/nvim-lualine/lualine.nvim" },
-	{ src = "https://github.com/nvim-tree/nvim-tree.lua" },
+	{ src = "https://github.com/rmagatti/auto-session" }, -- 加载最近对话
+	{ src = "https://github.com/nvim-lualine/lualine.nvim" }, -- 好看的状态栏
+	{ src = "https://github.com/nvim-tree/nvim-tree.lua" }, -- 文件树
 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
-	{ src = "https://github.com/akinsho/bufferline.nvim" },
-	{ src = "https://github.com/lewis6991/gitsigns.nvim" },
-	{ src = "https://github.com/nvim-telescope/telescope.nvim" },
+	{ src = "https://github.com/akinsho/bufferline.nvim" }, -- 标签卡栏
+	{ src = "https://github.com/lewis6991/gitsigns.nvim" }, -- 文件内每一行git状态显示
+	{ src = "https://github.com/nvim-telescope/telescope.nvim" }, -- 快速搜索文件 / 内容 / 提交历史
 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
 	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" },
-	{ src = "https://github.com/stevearc/stickybuf.nvim" },
-	{ src = "https://github.com/akinsho/toggleterm.nvim" },
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
-	{ src = "https://github.com/williamboman/mason.nvim" },
+	{ src = "https://github.com/stevearc/stickybuf.nvim" }, -- 必装, 解决一些栏会被占用的问题
+	{ src = "https://github.com/akinsho/toggleterm.nvim" }, -- 内部终端
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" }, -- 语法高亮
+	{ src = "https://github.com/williamboman/mason.nvim" }, -- 自动下载 lsp server 和格式化服务器
 	{ src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
-	{ src = "https://github.com/stevearc/conform.nvim" },
-	{ src = "https://github.com/saghen/blink.cmp" },
+	{ src = "https://github.com/stevearc/conform.nvim" }, -- 格式化工具
+	{ src = "https://github.com/saghen/blink.cmp" }, -- 联想补全菜单
 	{ src = "https://github.com/saghen/blink.lib" },
-	{ src = "https://github.com/echasnovski/mini.pairs" },
-	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
+	{ src = "https://github.com/echasnovski/mini.pairs" }, -- []{}""``自动补全
+	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" }, -- 行内风格渲染markdown, 代码高亮, 不同标题不同颜色
 	{ src = "https://github.com/nvim-mini/mini.nvim" },
-	{ src = "https://github.com/kylechui/nvim-surround" },
-	{ src = "https://github.com/linux-cultist/venv-selector.nvim" },
+	{ src = "https://github.com/kylechui/nvim-surround" }, -- 添加调整 [] {} `` "" 包围
+	{ src = "https://github.com/linux-cultist/venv-selector.nvim" }, -- python 虚拟环境选择, 自动重启lsp server
+	-- { src = "https://github.com/rainzm/flash-zh.nvim" }, --双拼版快速跳转
 })
 
 -- indent line
@@ -185,7 +189,15 @@ require("conform").setup({
 		lsp_format = "fallback",
 	},
 })
-
+-- require("flash-zh").setup()
+--
+-- vim.keymap.set({ "n", "x", "o" }, "s", function()
+-- 	require("flash-zh").jump({
+-- 		chinese_only = false,
+-- 	})
+-- end, {
+-- 	desc = "Flash between Chinese",
+-- })
 -- lazy  markdown render
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "markdown" },
@@ -737,4 +749,4 @@ local toggle_minipairs = function()
 		vim.g.minipairs_disable = true
 	end
 end
-vim.keymap.set({ "i","v","n" }, "<A-p>", toggle_minipairs)
+vim.keymap.set({ "i", "v", "n" }, "<A-p>", toggle_minipairs)

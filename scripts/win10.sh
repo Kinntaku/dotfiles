@@ -60,5 +60,6 @@ qemu-system-x86_64 \
 	\
 	-device qemu-xhci \
 	-device usb-tablet \
+	-monitor stdio \
 	-monitor unix:/tmp/qemu.sock,server=on,wait=off \
 	-nic user,model=virtio-net-pci

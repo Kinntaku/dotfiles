@@ -45,3 +45,9 @@ pkill wps && pkill wpp && pkill et
 
 # fresh monitor
 $DOTFILES/scripts/fresh_monitor.sh
+
+# device add qemu
+device_add usb-host,vendorid=,productid=,id=usb1
+
+# del device
+device_del usb1
