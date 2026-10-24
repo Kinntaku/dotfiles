@@ -72,11 +72,13 @@ vim.pack.add({
 	{ src = "https://github.com/saghen/blink.lib" },
 	{ src = "https://github.com/echasnovski/mini.pairs" }, -- []{}""``自动补全
 	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" }, -- 行内风格渲染markdown, 代码高亮, 不同标题不同颜色
-	{ src = "https://github.com/nvim-mini/mini.nvim" },
 	{ src = "https://github.com/kylechui/nvim-surround" }, -- 添加调整 [] {} `` "" 包围
 	{ src = "https://github.com/linux-cultist/venv-selector.nvim" }, -- python 虚拟环境选择, 自动重启lsp server
-	-- { src = "https://github.com/rainzm/flash-zh.nvim" }, --双拼版快速跳转
+	{ src = "https://github.com/tiagovla/scope.nvim" },
 })
+
+-- require("tabscope").setup({})
+require("scope").setup({})
 
 -- indent line
 
@@ -293,6 +295,7 @@ end)
 vim.keymap.set("n", "<leader>mt", "<cmd>RenderMarkdown toggle<CR>")
 
 -- toggle auto enetr
+vim.opt.wrap = false
 vim.keymap.set("n", "<leader>tw", function()
 	vim.opt.wrap = not vim.opt.wrap:get()
 end)
@@ -308,7 +311,7 @@ vim.keymap.set("t", "<A-h>", [[<C-\><C-n><C-w>h]])
 vim.keymap.set("t", "<A-j>", [[<C-\><C-n><C-w>j]])
 vim.keymap.set("t", "<A-k>", [[<C-\><C-n><C-w>k]])
 vim.keymap.set("t", "<A-l>", [[<C-\><C-n><C-w>l]])
-vim.keymap.set("n", "<leader>nt", ":tab split<CR>")
+vim.keymap.set("n", "<leader>nt", ":tabe<CR>")
 vim.keymap.set("n", "<leader>ct", ":tabclose<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-E>", "<Cmd>tabnext<CR>")
 vim.keymap.set({ "n", "v", "i" }, "<A-Q>", "<Cmd>tabprevious<CR>")
@@ -355,8 +358,13 @@ vim.keymap.set("n", "D", '"_D')
 vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]])
 
 -- line head & end
-vim.keymap.set({ "n", "v" }, "-", "g^")
-vim.keymap.set({ "n", "v" }, "=", "g$")
+vim.keymap.set({ "n", "v" }, "-", function()
+	return vim.opt.wrap:get() and "g^" or "^"
+end, { expr = true })
+
+vim.keymap.set({ "n", "v" }, "=", function()
+	return vim.opt.wrap:get() and "g$" or "$"
+end, { expr = true })
 
 -- change indent
 vim.keymap.set("v", "<", "<gv", { remap = false })
